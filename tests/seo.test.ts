@@ -43,11 +43,15 @@ describe("technical SEO", () => {
 
   it("declares Spanish document and corporate metadata", () => {
     const layout = RootLayout({ children: null });
+    const serializedLayout = JSON.stringify(layout);
     expect(layout.props.lang).toBe("es");
     expect(JSON.stringify(rootMetadata.title)).toContain("Nyvora Technologies");
     expect(rootMetadata.description).toMatch(/\b(empresa|software|tecnología|instituciones|Honduras)\b/i);
     expect(rootMetadata.openGraph?.locale).toBe("es_HN");
     expect(JSON.stringify(rootMetadata)).not.toMatch(/enterprise software for financial institutions/i);
+    expect(serializedLayout).toContain(SITE.emails.contact);
+    expect(serializedLayout).toContain(SITE.emails.support);
+    expect(serializedLayout).not.toMatch(/@nyvoratechnologies\.com\.test-|security@nyvoratechnologies\.com/i);
   });
 
   it("uses Spanish metadata and the corporate social card on public pages", () => {

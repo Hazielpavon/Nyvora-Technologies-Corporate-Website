@@ -7,8 +7,14 @@ export const SITE = {
   description:
     "Startup tecnológica hondureña dedicada al desarrollo de soluciones de software modernas, útiles y con potencial regional e internacional.",
   location: "Tegucigalpa, Honduras",
-  legalEffectiveDate: "2026-08-12",
-  legalEffectiveDateLabel: "12 de agosto de 2026",
+  emails: {
+    contact: "contact@nyvoratechnologies.com",
+    support: "support@nyvoratechnologies.com",
+    legal: "legal@nyvoratechnologies.com",
+    privacy: "privacy@nyvoratechnologies.com",
+  },
+  legalEffectiveDate: "2026-08-13",
+  legalEffectiveDateLabel: "13 de agosto de 2026",
 } as const;
 
 type PageMetadataInput = {

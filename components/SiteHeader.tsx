@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -31,8 +32,15 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={`site-container ${styles.inner}`}>
         <Link className={styles.brand} href="/" aria-label="Nyvora Technologies, página principal">
-          <span className={styles.brandPrimary}>Nyvora</span>
-          <span className={styles.brandSecondary}>Technologies</span>
+          <Image
+            className={styles.brandLogo}
+            src="/nyvora-logo.png"
+            alt=""
+            width={2048}
+            height={768}
+            priority
+            sizes="(max-width: 920px) 150px, 180px"
+          />
         </Link>
 
         <button

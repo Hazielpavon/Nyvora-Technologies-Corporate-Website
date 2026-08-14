@@ -9,14 +9,14 @@
 }
 
 .notice {
-  border: 1px solid rgba(243, 201, 107, 0.35);
-  border-left: 3px solid var(--warning);
+  border: 1px solid rgba(59, 214, 255, 0.28);
+  border-left: 3px solid var(--cyan);
   padding: 18px 20px;
-  background: rgba(243, 201, 107, 0.055);
+  background: rgba(59, 214, 255, 0.045);
 }
 
 .notice strong {
-  color: var(--warning);
+  color: var(--cyan);
   font-size: 0.91rem;
 }
 
@@ -152,6 +152,11 @@
   color: #ffc1c5;
 }
 
+.statusReady {
+  border-left-color: var(--success);
+  color: #a8f1d5;
+}
+
 .submitButton {
   min-height: 50px;
   display: flex;
@@ -168,6 +173,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-decoration: none;
 }
 
 .submitButton:hover:not(:disabled) {

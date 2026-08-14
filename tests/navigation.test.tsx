@@ -17,6 +17,8 @@ describe("corporate navigation", () => {
     });
     expect(navigation).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Myke" })).toHaveAttribute("aria-current", "page");
+    const brand = screen.getByRole("link", { name: /Nyvora Technologies, página principal/i });
+    expect(brand.querySelector("img")?.getAttribute("src")).toContain("nyvora-logo.png");
 
     const expectedLinks = [
       ["Company", "/"],
@@ -53,7 +55,7 @@ describe("corporate navigation", () => {
     expect(menuButton).toHaveFocus();
   });
 
-  it("exposes legal routes without Support or public email addresses", () => {
+  it("exposes legal routes and the approved general and support mailboxes", () => {
     const { container } = render(<SiteFooter />);
 
     ["/privacy", "/terms"].forEach((href) => {
@@ -62,8 +64,10 @@ describe("corporate navigation", () => {
     ["/architecture", "/security", "/company", "/support"].forEach((href) => {
       expect(container.querySelector(`a[href="${href}"]`)).not.toBeInTheDocument();
     });
-    expect(container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
-    expect(container).not.toHaveTextContent(/(?:support|security)@nyvoratechnologies\.com/i);
-    expect(container).not.toHaveTextContent(/\bSupport\b/i);
+    expect(container.querySelector('a[href="mailto:contact@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(container.querySelector('a[href="mailto:support@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(container.innerHTML).not.toMatch(/@nyvoratechnologies\.com\.test-|security@nyvoratechnologies\.com/i);
+    const brand = screen.getByRole("link", { name: /Nyvora Technologies, página principal/i });
+    expect(brand.querySelector("img")?.getAttribute("src")).toContain("nyvora-logo.png");
   });
 });

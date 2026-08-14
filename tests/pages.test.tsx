@@ -25,8 +25,22 @@ describe("critical page rendering", () => {
     expect(screen.getByRole("heading", { level: 1, name })).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.queryByText(retiredHeading)).not.toBeInTheDocument();
-    expect(container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
-    expect(container).not.toHaveTextContent(/(?:support|security)@nyvoratechnologies\.com/i);
+    expect(container.innerHTML).not.toMatch(/@nyvoratechnologies\.com\.test-|security@nyvoratechnologies\.com/i);
+  });
+
+  it("exposes the confirmed mailbox for each public contact context", () => {
+    const contact = render(<ContactPage />);
+    expect(contact.container.querySelector('a[href="mailto:contact@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(contact.container.querySelector('a[href="mailto:support@nyvoratechnologies.com"]')).toBeInTheDocument();
+    contact.unmount();
+
+    const privacy = render(<PrivacyPage />);
+    expect(privacy.container.querySelector('a[href^="mailto:privacy@nyvoratechnologies.com"]')).toBeInTheDocument();
+    privacy.unmount();
+
+    const terms = render(<TermsPage />);
+    expect(terms.container.querySelector('a[href^="mailto:legal@nyvoratechnologies.com"]')).toBeInTheDocument();
+    terms.unmount();
   });
 
   it("does not expose a public Support route", async () => {

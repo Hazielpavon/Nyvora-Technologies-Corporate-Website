@@ -18,7 +18,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Contact / Nyvora Technologies"
         title="Un solo punto de contacto."
-        intro="Esta sección reunirá las consultas sobre Nyvora Technologies, Myke, oportunidades, alianzas y soporte."
+        intro="Esta sección reúne las consultas sobre Nyvora Technologies, Myke, oportunidades, alianzas y soporte."
         aside={
           <p>
             Consultas generales
@@ -35,10 +35,16 @@ export default function ContactPage() {
           <ContactForm />
           <aside className={styles.contactSidebar} aria-label="Información del canal de contacto">
             <div className={styles.contactBlock}>
-              <h2>Canal único</h2>
+              <h2>Consultas generales</h2>
               <p>
-                Cuando esté habilitado, Contact será el punto de entrada para consultas generales, comerciales y de soporte.
+                Información sobre Nyvora, Myke, oportunidades comerciales y alianzas.
               </p>
+              <a href={`mailto:${SITE.emails.contact}`}>{SITE.emails.contact}</a>
+            </div>
+            <div className={styles.contactBlock}>
+              <h2>Soporte</h2>
+              <p>Ayuda relacionada con productos o servicios de Nyvora.</p>
+              <a href={`mailto:${SITE.emails.support}`}>{SITE.emails.support}</a>
             </div>
             <div className={styles.contactBlock}>
               <h2>Ubicación</h2>

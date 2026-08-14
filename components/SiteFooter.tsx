@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import styles from "./SiteFooter.module.css";
@@ -7,7 +8,16 @@ export function SiteFooter() {
     <footer className={styles.footer}>
       <div className={`site-container ${styles.grid}`}>
         <div className={styles.identity}>
-          <p className={styles.wordmark}>Nyvora Technologies</p>
+          <Link className={styles.brand} href="/" aria-label="Nyvora Technologies, página principal">
+            <Image
+              className={styles.brandLogo}
+              src="/nyvora-logo.png"
+              alt=""
+              width={2048}
+              height={768}
+              sizes="240px"
+            />
+          </Link>
           <p className={styles.statement}>
             Tecnología creada en Honduras para construir nuevas posibilidades.
           </p>
@@ -26,6 +36,12 @@ export function SiteFooter() {
           <Link href="/privacy">Privacidad</Link>
           <Link href="/terms">Términos de uso</Link>
         </nav>
+
+        <div className={styles.linkGroup}>
+          <p className={styles.linkHeading}>Contacto</p>
+          <a href={`mailto:${SITE.emails.contact}`}>{SITE.emails.contact}</a>
+          <a href={`mailto:${SITE.emails.support}`}>{SITE.emails.support}</a>
+        </div>
       </div>
       <div className={`site-container ${styles.bottom}`}>
         <p>© {new Date().getFullYear()} Nyvora Technologies.</p>

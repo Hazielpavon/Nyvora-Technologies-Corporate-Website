@@ -16,7 +16,7 @@ export default function PrivacyPage() {
     <LegalPage
       eyebrow="Legal / Privacidad del sitio web"
       title="Aviso de privacidad del sitio web"
-      intro="Este aviso explica cómo Nyvora Technologies podría tratar información personal relacionada con este sitio web corporativo y, en el futuro, con la información que se remita mediante Contact."
+      intro="Este aviso explica cómo Nyvora Technologies podría tratar información personal relacionada con este sitio web corporativo y con los mensajes que usted decida enviar por correo electrónico desde Contact."
     >
       <section id="scope">
         <h2>1. Alcance</h2>
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
       <section id="information">
         <h2>2. Información que podríamos tratar</h2>
         <p>
-          Actualmente, el sitio no recibe ni almacena solicitudes de contacto. Si en el futuro se habilita Contact, podríamos recibir la información que usted decida proporcionar, como su nombre, organización, correo empresarial, motivo de contacto y mensaje.
+          El sitio no procesa ni almacena directamente los campos del formulario. Contact prepara un borrador en la aplicación de correo del visitante. La información solo se remite a Nyvora cuando la persona decide enviar ese correo; en ese momento podríamos recibir su nombre, organización, dirección de correo, motivo de contacto y mensaje.
         </p>
         <p>
           La infraestructura de alojamiento y seguridad del sitio podría tratar datos técnicos básicos, como la dirección IP, información del navegador o dispositivo, páginas solicitadas, marcas de tiempo y registros de diagnóstico o seguridad. Los datos concretos dependerán de la configuración y de los proveedores que finalmente se seleccionen.
@@ -49,10 +49,10 @@ export default function PrivacyPage() {
       <section id="providers">
         <h2>4. Proveedores de servicios y divulgación</h2>
         <p>
-          Podríamos facilitar información a proveedores que apoyen el alojamiento, la seguridad o las comunicaciones empresariales del sitio, sujetos a las condiciones que correspondan. También podríamos divulgar información cuando lo exija la ley o cuando sea razonablemente necesario para proteger derechos, integridad o seguridad.
+          La entrega, recepción y almacenamiento de los mensajes puede involucrar a los servicios de correo utilizados por el remitente y por Nyvora, sujetos a las condiciones que correspondan. También podríamos facilitar información a proveedores que apoyen el alojamiento, la seguridad o las comunicaciones empresariales, o divulgarla cuando lo exija la ley o sea razonablemente necesario para proteger derechos, integridad o seguridad.
         </p>
         <p>
-          Los proveedores definitivos no se han confirmado para todas las funciones. Este aviso deberá actualizarse antes de habilitar un formulario, una herramienta de analítica, un sistema de gestión de relaciones o cualquier otro servicio que trate datos.
+          Los proveedores definitivos no se han confirmado para todas las funciones. Este aviso deberá actualizarse antes de conectar un envío directo desde el sitio, una herramienta de analítica, un sistema de gestión de relaciones o cualquier otro servicio adicional que trate datos.
         </p>
       </section>
 
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
       <section id="rights">
         <h2>8. Sus opciones y derechos</h2>
         <p>
-          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. El procedimiento para ejercer estos derechos mediante Contact deberá publicarse antes de habilitar cualquier función que recopile información voluntaria. Podría ser necesario verificar la identidad de la persona solicitante.
+          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. Para formular una solicitud, escriba a <a href={`mailto:${SITE.emails.privacy}?subject=Solicitud%20de%20privacidad`}>{SITE.emails.privacy}</a>. Podría ser necesario verificar la identidad de la persona solicitante.
         </p>
       </section>
 
@@ -94,10 +94,10 @@ export default function PrivacyPage() {
       <section id="contact">
         <h2>10. Contacto</h2>
         <p>
-          Cuando se habilite, Contact será el único canal público para consultas de privacidad. Actualmente el sitio no recibe este tipo de solicitudes. Nyvora Technologies, {SITE.location}.
+          Para consultas o solicitudes relacionadas con privacidad, escriba a <a href={`mailto:${SITE.emails.privacy}?subject=Solicitud%20de%20privacidad`}>{SITE.emails.privacy}</a>. Nyvora Technologies, {SITE.location}.
         </p>
         <p>
-          Antes de la publicación en producción, la revisión jurídica deberá confirmar la entidad legal responsable, las bases jurídicas aplicables, los derechos de los visitantes según su ubicación, las salvaguardas para transferencias internacionales, los criterios de conservación y el procedimiento aplicable a las solicitudes de privacidad dentro de Contact.
+          La revisión jurídica deberá confirmar la entidad legal responsable, las bases jurídicas aplicables, los derechos de los visitantes según su ubicación, las salvaguardas para transferencias internacionales, los criterios de conservación y el procedimiento aplicable a las solicitudes de privacidad.
         </p>
       </section>
     </LegalPage>

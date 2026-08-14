@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/Primitives";
-import { createPageMetadata } from "@/lib/site";
+import { createPageMetadata, SITE } from "@/lib/site";
 
 // REVISIÓN JURÍDICA PENDIENTE: confirmar propiedad intelectual, exclusiones,
 // límites de responsabilidad, legislación aplicable, foro y controversias.
@@ -107,7 +107,7 @@ export default function TermsPage() {
       <section id="contact">
         <h2>12. Contacto</h2>
         <p>
-          Cuando se habilite, Contact será el único canal público para formular consultas sobre estos términos. Actualmente el sitio no recibe este tipo de solicitudes.
+          Para formular consultas sobre estos términos, escriba a <a href={`mailto:${SITE.emails.legal}?subject=Consulta%20sobre%20los%20términos%20de%20uso`}>{SITE.emails.legal}</a>.
         </p>
       </section>
     </LegalPage>

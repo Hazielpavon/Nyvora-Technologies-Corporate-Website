@@ -16,25 +16,19 @@
 }
 
 .brand {
-  display: inline-grid;
+  display: block;
+  width: 180px;
   flex: 0 0 auto;
-  color: var(--text);
-  line-height: 1;
-  text-transform: uppercase;
+  overflow: hidden;
+  border: 1px solid rgba(244, 248, 252, 0.22);
+  border-radius: 5px;
+  background: #f4f8fc;
 }
 
-.brandPrimary {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.26em;
-}
-
-.brandSecondary {
-  margin-top: 5px;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.31em;
+.brandLogo {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .navigation {
@@ -126,6 +120,10 @@
 
   .menuButton {
     display: inline-flex;
+  }
+
+  .brand {
+    width: 150px;
   }
 
   .navigation {

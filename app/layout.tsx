@@ -60,6 +60,21 @@ const organizationSchema = {
   name: SITE.name,
   url: SITE.url,
   description: SITE.description,
+  email: SITE.emails.contact,
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "general inquiries",
+      email: SITE.emails.contact,
+      availableLanguage: ["es"],
+    },
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: SITE.emails.support,
+      availableLanguage: ["es"],
+    },
+  ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Tegucigalpa",
