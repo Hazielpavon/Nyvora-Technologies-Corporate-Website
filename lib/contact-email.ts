@@ -1,8 +1,8 @@
-import nodemailer from "nodemailer";
+import { randomBytes } from "node:crypto";
+import { Resend } from "resend";
 import {
   getContactReason,
   getContactRecipient,
-  isValidEmailAddress,
   type ContactSubmission,
 } from "@/lib/contact";
 
@@ -13,73 +13,37 @@ export class ContactEmailConfigurationError extends Error {
   }
 }
 
-function getSmtpConfiguration() {
-  const host = process.env.SMTP_HOST?.trim();
-  const port = Number(process.env.SMTP_PORT ?? "465");
-  const user = process.env.SMTP_USER?.trim();
-  const password = process.env.SMTP_PASSWORD;
-  const fromAddress = process.env.SMTP_FROM_ADDRESS?.trim();
-  const fromName = process.env.SMTP_FROM_NAME?.trim() || "Nyvora Technologies";
-  const secureValue = process.env.SMTP_SECURE?.trim().toLowerCase();
-  const secure = secureValue ? secureValue === "true" : port === 465;
+const domainPattern = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i;
 
-  if (
-    !host ||
-    /\s/.test(host) ||
-    !Number.isInteger(port) ||
-    port < 1 ||
-    port > 65535 ||
-    !user ||
-    !isValidEmailAddress(user) ||
-    !password ||
-    !fromAddress ||
-    !isValidEmailAddress(fromAddress) ||
-    (secureValue !== undefined && secureValue !== "true" && secureValue !== "false") ||
-    fromName.length > 100 ||
-    /[\r\n]/.test(fromName)
-  ) {
+function getResendConfiguration() {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const domain = process.env.RESEND_EMAIL_DOMAIN?.trim().toLowerCase();
+
+  if (!apiKey || !domain || !domainPattern.test(domain)) {
     throw new ContactEmailConfigurationError();
   }
 
-  return {
-    host,
-    port,
-    secure,
-    user,
-    password,
-    fromAddress,
-    fromName,
-  };
+  return { apiKey, domain };
+}
+
+function createInquiryReference() {
+  return randomBytes(4).toString("hex").toUpperCase();
 }
 
 export async function sendContactEmail(submission: ContactSubmission) {
-  const configuration = getSmtpConfiguration();
+  const configuration = getResendConfiguration();
   const reason = getContactReason(submission.reason);
   const recipient = getContactRecipient(submission.reason);
-  const transporter = nodemailer.createTransport({
-    host: configuration.host,
-    port: configuration.port,
-    secure: configuration.secure,
-    requireTLS: !configuration.secure,
-    auth: {
-      user: configuration.user,
-      pass: configuration.password,
-    },
-    connectionTimeout: 10_000,
-    greetingTimeout: 10_000,
-    socketTimeout: 15_000,
-  });
-
-  await transporter.sendMail({
-    from: {
-      name: configuration.fromName,
-      address: configuration.fromAddress,
-    },
+  const reference = createInquiryReference();
+  const resend = new Resend(configuration.apiKey);
+  const { data, error } = await resend.emails.send({
+    from: `Nyvora Website <website@${configuration.domain}>`,
     to: recipient,
-    replyTo: { address: submission.email },
-    subject: `[Nyvora.com] ${reason.label}`,
+    replyTo: submission.email,
+    subject: `[Nyvora ${reference}] ${reason.label}`,
     text: [
       "Nueva consulta desde nyvoratechnologies.com",
+      `Referencia: ${reference}`,
       "",
       `Motivo: ${reason.label}`,
       `Nombre: ${submission.name}`,
@@ -90,4 +54,8 @@ export async function sendContactEmail(submission: ContactSubmission) {
       submission.message,
     ].join("\n"),
   });
+
+  if (error || !data?.id) {
+    throw new Error("Contact email delivery failed.");
+  }
 }

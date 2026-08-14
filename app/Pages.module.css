@@ -2,6 +2,38 @@
   background: var(--canvas-raised);
 }
 
+.heroFacts {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+.heroFacts div {
+  display: grid;
+  gap: 6px;
+}
+
+.heroFacts div + div {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.heroFacts dt {
+  color: var(--cyan);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.heroFacts dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  letter-spacing: 0;
+  line-height: 1.55;
+  text-transform: none;
+}
+
 .introGrid {
   display: grid;
   grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);

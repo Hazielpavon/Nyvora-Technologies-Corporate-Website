@@ -102,7 +102,7 @@ describe("POST /api/contact", () => {
     expect(sendContactEmail).not.toHaveBeenCalled();
   });
 
-  it("returns an honest unavailable state when SMTP is not configured", async () => {
+  it("returns an honest unavailable state when delivery is not configured", async () => {
     vi.mocked(sendContactEmail).mockRejectedValueOnce(new ContactEmailConfigurationError());
     const response = await POST(contactRequest(validInput));
 
@@ -111,7 +111,7 @@ describe("POST /api/contact", () => {
   });
 
   it("does not leak provider errors", async () => {
-    vi.mocked(sendContactEmail).mockRejectedValueOnce(new Error("sensitive SMTP detail"));
+    vi.mocked(sendContactEmail).mockRejectedValueOnce(new Error("sensitive provider detail"));
     const response = await POST(contactRequest(validInput));
 
     expect(response.status).toBe(502);

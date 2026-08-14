@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ActionLink, PageHero, SectionHeading } from "@/components/Primitives";
-import { mykeBenefits, mykeCapabilities } from "@/content";
+import { mykeBenefits, mykeCapabilities, mykeHeroFacts } from "@/content";
 import { createPageMetadata, SITE } from "@/lib/site";
 import styles from "../Pages.module.css";
 
@@ -31,15 +31,16 @@ export default function MykePage() {
       <PageHero
         eyebrow="Producto / Nyvora Myke"
         title="Myke"
-        intro="Una experiencia conversacional diseñada para acercar la banca digital a las personas."
+        intro="Myke permite que las personas expresen una necesidad bancaria con palabras cotidianas y las orienta dentro de la información y los servicios que cada institución decida habilitar."
         aside={
-          <p>
-            Desarrollado por Nyvora
-            <br />
-            Conversaciones naturales
-            <br />
-            Experiencia adaptable
-          </p>
+          <dl className={styles.heroFacts}>
+            {mykeHeroFacts.map((fact) => (
+              <div key={fact.label}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
         }
       />
 

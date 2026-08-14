@@ -31,6 +31,21 @@ export const companyPrinciples = [
   },
 ] as const;
 
+export const mykeHeroFacts = [
+  {
+    label: "Qué es",
+    value: "Una experiencia digital para interactuar con servicios bancarios mediante una conversación.",
+  },
+  {
+    label: "Para quién",
+    value: "Instituciones financieras y las personas que utilizan sus servicios.",
+  },
+  {
+    label: "Qué aporta",
+    value: "Ayuda a consultar información, comprender movimientos y preparar solicitudes con mayor claridad.",
+  },
+] as const;
+
 export const mykeBenefits = [
   {
     title: "Conversaciones naturales",

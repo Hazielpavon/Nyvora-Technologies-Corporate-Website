@@ -50,7 +50,7 @@ export default function PrivacyPage() {
       <section id="providers">
         <h2>4. Proveedores de servicios y divulgación</h2>
         <p>
-          Vercel proporciona el alojamiento y la función que recibe la consulta. Google Workspace proporciona el correo corporativo al que se entrega el mensaje. Estos proveedores pueden tratar la información y los datos técnicos necesarios para prestar sus servicios, sujetos a sus condiciones y a los acuerdos aplicables.
+          Vercel proporciona el alojamiento y la función que recibe la consulta. Resend presta el servicio de entrega transaccional que dirige el mensaje al canal correspondiente de Nyvora. Google Workspace proporciona el correo corporativo en el que se recibe y gestiona la consulta. Estos proveedores pueden tratar la información y los datos técnicos necesarios para prestar sus servicios, sujetos a sus condiciones y a los acuerdos aplicables.
         </p>
         <p>
           Nyvora también podría divulgar información cuando lo exija la ley o cuando sea razonablemente necesario para proteger derechos, integridad o seguridad. Este aviso deberá actualizarse antes de incorporar analítica, un sistema de gestión de relaciones u otro servicio adicional que trate datos.
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
       <section id="retention">
         <h2>6. Conservación</h2>
         <p>
-          Nyvora no mantiene una base de datos separada de consultas dentro del sitio. Los mensajes pueden conservarse en el buzón corporativo durante el tiempo razonablemente necesario para atenderlos y cumplir necesidades legales, de seguridad o de registro. No se publica un plazo fijo hasta completar la revisión jurídica y operativa correspondiente.
+          Nyvora no mantiene una base de datos separada de consultas dentro del sitio. Los proveedores que intervienen en la transmisión pueden conservar registros técnicos conforme a su configuración y condiciones, y los mensajes pueden permanecer en el buzón corporativo durante el tiempo razonablemente necesario para atenderlos y cumplir necesidades legales, de seguridad o de registro. No se publica un plazo fijo hasta completar la revisión jurídica y operativa correspondiente.
         </p>
       </section>
 
