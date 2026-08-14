@@ -34,38 +34,38 @@ export const companyPrinciples = [
 export const mykeHeroFacts = [
   {
     label: "Qué es",
-    value: "Una experiencia digital para interactuar con servicios bancarios mediante una conversación.",
+    value: "Una plataforma de banca conversacional desarrollada por Nyvora Technologies.",
   },
   {
     label: "Para quién",
-    value: "Instituciones financieras y las personas que utilizan sus servicios.",
+    value: "Instituciones financieras que buscan acercar sus servicios digitales a las personas.",
   },
   {
-    label: "Qué aporta",
-    value: "Ayuda a consultar información, comprender movimientos y preparar solicitudes con mayor claridad.",
+    label: "Qué cambia",
+    value: "La interacción comienza por la necesidad, no por encontrar primero una función.",
   },
 ] as const;
 
 export const mykeBenefits = [
   {
-    title: "Conversaciones naturales",
+    title: "Identidad propia",
     description:
-      "Permite expresar necesidades bancarias con palabras cotidianas dentro de una experiencia conversacional.",
+      "El tono, la presentación y el lenguaje pueden alinearse con la marca de la entidad.",
   },
   {
-    title: "Experiencia adaptable",
+    title: "Funciones seleccionadas",
     description:
-      "Puede ajustarse a la identidad y a las necesidades definidas por cada institución financiera.",
+      "Cada banco determina qué consultas, gestiones y servicios forman parte del alcance.",
   },
   {
-    title: "Procesos más claros",
+    title: "Canales y mercados",
     description:
-      "Ayuda a presentar información y preparar solicitudes de una forma más comprensible para las personas.",
+      "Myke puede ajustarse a los puntos de contacto digitales, idiomas y contextos que la entidad configure.",
   },
   {
-    title: "Integración institucional",
+    title: "Evolución gradual",
     description:
-      "Funciona junto con los servicios y capacidades que cada institución decida habilitar.",
+      "El alcance puede comenzar con recorridos definidos y ampliarse conforme el banco incorpore nuevas opciones.",
   },
 ] as const;
 
@@ -73,21 +73,44 @@ export const mykeCapabilities = [
   {
     title: "Consultar información",
     description:
-      "Permite formular preguntas con palabras cotidianas y recibir la información que la institución haya habilitado dentro de la experiencia.",
+      "La persona puede preguntar «¿Cuánto tengo disponible?» o pedir «Muéstrame mis movimientos recientes». Myke presenta la información que el banco haya puesto a disposición.",
   },
   {
     title: "Comprender movimientos",
     description:
-      "Ayuda a presentar conceptos, fechas y referencias de forma ordenada para facilitar la interpretación de la información disponible.",
+      "Ante una pregunta como «¿Qué fue este cobro?», la conversación puede ordenar conceptos, fechas y referencias disponibles para ofrecer contexto en un lenguaje más claro.",
   },
   {
-    title: "Preparar solicitudes",
+    title: "Explorar y preparar",
     description:
-      "Acompaña la recopilación de los datos necesarios y ayuda a identificar información pendiente antes de continuar con una solicitud.",
+      "Cuando alguien desea iniciar una gestión, la conversación puede reunir la información necesaria, señalar qué falta y preparar el siguiente paso.",
   },
   {
-    title: "Encontrar el siguiente paso",
+    title: "Continuar con orientación",
     description:
-      "Orienta a la persona hacia las opciones disponibles o hacia el canal correspondiente cuando una gestión requiere atención de la institución.",
+      "Si una solicitud requiere otro proceso o canal, indica cómo continuar dentro del recorrido definido por la entidad.",
+  },
+] as const;
+
+export const mykeJourneySteps = [
+  {
+    title: "Precisar la gestión",
+    description:
+      "Identificar la información necesaria para comprender qué desea hacer la persona.",
+  },
+  {
+    title: "Presentar lo relevante",
+    description:
+      "Mostrar de forma ordenada los datos disponibles y aquello que falta por completar.",
+  },
+  {
+    title: "Revisar antes de continuar",
+    description:
+      "Ofrecer un resumen comprensible de la solicitud que se está preparando.",
+  },
+  {
+    title: "Seguir el recorrido habilitado",
+    description:
+      "Continuar dentro del flujo y las condiciones que el banco haya definido.",
   },
 ] as const;

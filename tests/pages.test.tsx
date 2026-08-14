@@ -14,7 +14,11 @@ describe("critical page rendering", () => {
       "Tecnología creada en Honduras para construir nuevas posibilidades.",
       /enterprise intelligence for modern financial institutions/i,
     ],
-    [MykePage, "Myke", /enterprise conversational banking platform/i],
+    [
+      MykePage,
+      "La banca digital empieza por lo que la persona necesita.",
+      /enterprise conversational banking platform/i,
+    ],
     [ContactPage, "Un solo punto de contacto.", /start a conversation/i],
     [PrivacyPage, /aviso de privacidad del sitio web/i, /website privacy notice/i],
     [TermsPage, /términos de uso del sitio web/i, /website terms of use/i],
@@ -60,17 +64,53 @@ describe("critical page rendering", () => {
     expect(screen.getAllByText(/Tegucigalpa, Honduras/i).length).toBeGreaterThan(0);
   });
 
-  it("explains Myke through concrete, conditional use cases", () => {
-    render(<MykePage />);
+  it("explains Myke through a clear, conditional institutional narrative", () => {
+    const { container } = render(<MykePage />);
+
+    expect(
+      Array.from(container.querySelectorAll("dt"), (term) => term.textContent),
+    ).toEqual(["Qué es", "Para quién", "Qué cambia"]);
+
+    expect(
+      screen.getAllByText(/^0[1-5] \/ /).map((label) => label.textContent),
+    ).toEqual([
+      "01 / El punto de partida",
+      "02 / Qué hace Myke",
+      "03 / Junto a la banca existente",
+      "04 / Del lenguaje a una acción comprensible",
+      "05 / Diseñado para diferentes instituciones",
+    ]);
+
+    expect(
+      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual([
+      "Primero la necesidad. Después, el camino.",
+      "Una conversación para consultar, comprender y avanzar.",
+      "Una capa conversacional que convive con la banca digital existente.",
+      "De una solicitud amplia a un siguiente paso claro.",
+      "Una base común, adaptada a cada realidad.",
+      "Conozca cómo Myke puede integrarse a su experiencia digital.",
+    ]);
 
     [
       "Consultar información",
       "Comprender movimientos",
-      "Preparar solicitudes",
-      "Encontrar el siguiente paso",
+      "Explorar y preparar",
+      "Continuar con orientación",
     ].forEach((capability) => {
       expect(screen.getByRole("heading", { level: 3, name: capability })).toBeInTheDocument();
     });
-    expect(screen.getByText(/no sustituye las decisiones, autorizaciones ni canales/i)).toBeInTheDocument();
+
+    expect(container).toHaveTextContent("¿Cuánto tengo disponible?");
+    expect(container).toHaveTextContent("Quiero hacer una transferencia");
+    expect(container).toHaveTextContent(/no pretende sustituir los sistemas centrales/i);
+    expect(container).toHaveTextContent(/el control permanece en la institución/i);
+    expect(container).toHaveTextContent(/no mueve fondos por sí solo/i);
+    expect(container).toHaveTextContent(/depende de la información, los servicios y los procesos habilitados/i);
+    expect(screen.getByRole("link", { name: /hablar con nyvora/i })).toHaveAttribute("href", "/contact");
+
+    expect(container.textContent).not.toMatch(
+      /(?:ROI|24\/7|bank-grade|military-grade|cero fraude|automatización total|revolucionario|disruptivo|game changer|OpenAI|Gemini|Ollama|Qwen|ConversationService|OperationService|BankAttempt|idempotencia|outbox|confidence score)/i,
+    );
   });
 });

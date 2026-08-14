@@ -8,5 +8,6 @@ export const {
   mykeBenefits,
   mykeCapabilities,
   mykeHeroFacts,
+  mykeJourneySteps,
   navigation,
 } = locales[defaultLocale];

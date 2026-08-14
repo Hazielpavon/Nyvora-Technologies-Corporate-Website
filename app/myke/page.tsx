@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import { ActionLink, PageHero, SectionHeading } from "@/components/Primitives";
-import { mykeBenefits, mykeCapabilities, mykeHeroFacts } from "@/content";
+import {
+  mykeBenefits,
+  mykeCapabilities,
+  mykeHeroFacts,
+  mykeJourneySteps,
+} from "@/content";
 import { createPageMetadata, SITE } from "@/lib/site";
 import styles from "../Pages.module.css";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Myke",
+  title: "Myke — Banca conversacional",
   description:
-    "Myke es la plataforma de banca conversacional de Nyvora Technologies. Ayuda a consultar información, comprender movimientos y preparar solicitudes mediante interacciones naturales.",
+    "Myke es la plataforma de banca conversacional de Nyvora Technologies. La persona empieza por lo que necesita y el banco decide qué servicios habilita.",
   path: "/myke",
 });
 
@@ -17,7 +22,7 @@ const productSchema = {
   name: SITE.productName,
   applicationCategory: "FinanceApplication",
   description:
-    "Plataforma de banca conversacional desarrollada por Nyvora Technologies.",
+    "Plataforma de banca conversacional para instituciones financieras, desarrollada por Nyvora Technologies.",
   provider: {
     "@type": "Organization",
     name: SITE.name,
@@ -29,9 +34,9 @@ export default function MykePage() {
   return (
     <>
       <PageHero
-        eyebrow="Producto / Nyvora Myke"
-        title="Myke"
-        intro="Myke permite que las personas expresen una necesidad bancaria con palabras cotidianas y las orienta dentro de la información y los servicios que cada institución decida habilitar."
+        eyebrow="Nyvora Myke / Banca conversacional"
+        title="La banca digital empieza por lo que la persona necesita."
+        intro="Myke es una plataforma de banca conversacional para instituciones financieras. Convierte necesidades expresadas con palabras cotidianas en una interacción más directa con la información, los servicios y los procesos que cada banco decida habilitar."
         aside={
           <dl className={styles.heroFacts}>
             {mykeHeroFacts.map((fact) => (
@@ -47,15 +52,15 @@ export default function MykePage() {
       <section className="section">
         <div className={`site-container ${styles.introGrid}`}>
           <div>
-            <p className="eyebrow">01 / Una idea sencilla</p>
-            <h2>Una forma más directa de relacionarse con los servicios bancarios.</h2>
+            <p className="eyebrow">01 / El punto de partida</p>
+            <h2>Primero la necesidad. Después, el camino.</h2>
           </div>
           <div className={styles.prose}>
             <p>
-              Myke es una plataforma de banca conversacional desarrollada por Nyvora Technologies. Permite que una persona plantee una necesidad bancaria con palabras cotidianas, sin tener que conocer de antemano dónde encontrar cada opción o cómo se denomina un proceso.
+              En una experiencia bancaria convencional, la persona suele tener que localizar una función, recorrer menús y reconocer términos específicos antes de avanzar. Cuando la información está distribuida entre distintas pantallas, una consulta sencilla puede exigir más navegación de la esperada.
             </p>
             <p>
-              La conversación ayuda a organizar esa necesidad y presentar la información de una forma comprensible. Según lo que cada institución habilite, Myke puede acompañar consultas, aportar contexto sobre movimientos y preparar solicitudes para que la persona entienda qué información necesita y cuál es el siguiente paso.
+              Myke invierte ese orden. La interacción comienza con una pregunta o una tarea expresada de manera natural. Desde ahí, la conversación presenta las opciones y la información que el banco haya decidido ofrecer.
             </p>
           </div>
         </div>
@@ -64,9 +69,9 @@ export default function MykePage() {
       <section className={`section ${styles.sectionMuted}`}>
         <div className="site-container">
           <SectionHeading
-            eyebrow="02 / Funcionalidad"
-            title="Una conversación útil en distintos momentos de la experiencia bancaria."
-            description="Myke busca ofrecer un punto de entrada más claro a los servicios que cada institución decida poner a disposición."
+            eyebrow="02 / Qué hace Myke"
+            title="Una conversación para consultar, comprender y avanzar."
+            description="La propuesta no termina en responder preguntas aisladas. Según el alcance definido por cada entidad, Myke puede acompañar desde una consulta puntual hasta una gestión más estructurada."
             align="split"
           />
           <ol className={styles.useCaseList}>
@@ -79,7 +84,47 @@ export default function MykePage() {
             ))}
           </ol>
           <p className={styles.conditionalNote}>
-            Myke no sustituye las decisiones, autorizaciones ni canales de la institución. Las funciones disponibles dependen de la información y los servicios que cada entidad defina y habilite.
+            Los ejemplos son ilustrativos. La disponibilidad de cada consulta o gestión depende de la información, los servicios y los procesos habilitados por la institución.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className={`site-container ${styles.introGrid}`}>
+          <div>
+            <p className="eyebrow">03 / Junto a la banca existente</p>
+            <h2>Una capa conversacional que convive con la banca digital existente.</h2>
+          </div>
+          <div className={styles.prose}>
+            <p>
+              Myke no pretende sustituir los sistemas centrales de una entidad ni exige reemplazar su aplicación. Está diseñado para formar parte de la experiencia digital existente y trabajar junto a los servicios que el banco decida incorporar.
+            </p>
+            <p>
+              El control permanece en la institución: define qué información se muestra, qué funciones están disponibles y cuándo una persona debe continuar por un canal o proceso ya establecido. Myke ofrece una nueva puerta de entrada sin cambiar quién decide cómo opera cada servicio.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className={`section ${styles.sectionMuted}`}>
+        <div className="site-container">
+          <SectionHeading
+            eyebrow="04 / Del lenguaje a una acción comprensible"
+            title="De una solicitud amplia a un siguiente paso claro."
+            description="Una conversación puede comenzar con «Quiero hacer una transferencia». A partir de ahí, la interacción se vuelve más específica sin exigir que la persona conozca de antemano el recorrido."
+            align="split"
+          />
+          <ol className={styles.journeyFlow}>
+            {mykeJourneySteps.map((step, index) => (
+              <li key={step.title}>
+                <span>0{index + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </li>
+            ))}
+          </ol>
+          <p className={styles.conditionalNote}>
+            Myke organiza la interacción y prepara el recorrido; no mueve fondos por sí solo. La gestión continúa únicamente mediante las funciones y los procesos que la entidad haya habilitado.
           </p>
         </div>
       </section>
@@ -87,9 +132,9 @@ export default function MykePage() {
       <section className="section">
         <div className="site-container">
           <SectionHeading
-            eyebrow="03 / Adaptación institucional"
-            title="Una experiencia que responde al contexto de cada institución."
-            description="El lenguaje, la identidad y el alcance de Myke pueden definirse de acuerdo con la experiencia y los servicios que cada institución desea ofrecer."
+            eyebrow="05 / Diseñado para diferentes instituciones"
+            title="Una base común, adaptada a cada realidad."
+            description="Cada banco tiene una identidad, una oferta y una forma propia de atender a sus clientes. Myke puede ajustarse al lenguaje, la presentación, los servicios y el contexto de los mercados que la entidad configure."
             align="split"
           />
           <div className={styles.featureGrid}>
@@ -102,15 +147,21 @@ export default function MykePage() {
             ))}
           </div>
           <p className={styles.conditionalNote}>
-            La disponibilidad y el alcance de cada función dependen de la institución y de los acuerdos correspondientes.
+            La configuración concreta depende de las necesidades, los servicios disponibles y las decisiones de cada institución.
           </p>
         </div>
       </section>
 
       <section className="section">
         <div className={`site-container ${styles.finalCta}`}>
-          <h2>Converse con Nyvora sobre el alcance de Myke para su institución.</h2>
-          <ActionLink href="/contact">Solicitar información sobre Myke</ActionLink>
+          <div className={styles.finalCtaCopy}>
+            <p className="eyebrow">Myke para su institución</p>
+            <h2>Conozca cómo Myke puede integrarse a su experiencia digital.</h2>
+            <p className={styles.finalCtaIntro}>
+              Conversemos sobre los servicios y procesos que su institución desea acercar a sus clientes mediante una interacción más natural.
+            </p>
+          </div>
+          <ActionLink href="/contact">Hablar con Nyvora</ActionLink>
         </div>
       </section>
 
