@@ -39,12 +39,12 @@ export default function ContactPage() {
               <p>
                 Información sobre Nyvora, Myke, oportunidades comerciales y alianzas.
               </p>
-              <a href={`mailto:${SITE.emails.contact}`}>{SITE.emails.contact}</a>
+              <p className={styles.contactEmail}>{SITE.emails.contact}</p>
             </div>
             <div className={styles.contactBlock}>
               <h2>Soporte</h2>
               <p>Ayuda relacionada con productos o servicios de Nyvora.</p>
-              <a href={`mailto:${SITE.emails.support}`}>{SITE.emails.support}</a>
+              <p className={styles.contactEmail}>{SITE.emails.support}</p>
             </div>
             <div className={styles.contactBlock}>
               <h2>Ubicación</h2>
@@ -52,7 +52,7 @@ export default function ContactPage() {
             </div>
             <div className={styles.contactBlock}>
               <h2>Privacidad</h2>
-              <p>Conozca cómo se trataría la información compartida mediante el sitio.</p>
+              <p>Conozca cómo se trata la información compartida mediante el sitio.</p>
               <Link href="/privacy">Aviso de privacidad</Link>
             </div>
           </aside>

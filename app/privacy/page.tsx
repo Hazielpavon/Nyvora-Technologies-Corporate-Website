@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/Primitives";
 import { createPageMetadata, SITE } from "@/lib/site";
 
@@ -7,7 +8,7 @@ import { createPageMetadata, SITE } from "@/lib/site";
 export const metadata: Metadata = createPageMetadata({
   title: "Aviso de privacidad del sitio web",
   description:
-    "Aviso inicial sobre el posible tratamiento de consultas e información técnica básica en el sitio web corporativo de Nyvora Technologies.",
+    "Aviso inicial sobre el tratamiento de consultas e información técnica básica en el sitio web corporativo de Nyvora Technologies.",
   path: "/privacy",
 });
 
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
     <LegalPage
       eyebrow="Legal / Privacidad del sitio web"
       title="Aviso de privacidad del sitio web"
-      intro="Este aviso explica cómo Nyvora Technologies podría tratar información personal relacionada con este sitio web corporativo y con los mensajes que usted decida enviar por correo electrónico desde Contact."
+      intro="Este aviso explica cómo Nyvora Technologies trata información personal relacionada con este sitio web corporativo y con las consultas enviadas mediante Contact."
     >
       <section id="scope">
         <h2>1. Alcance</h2>
@@ -26,9 +27,9 @@ export default function PrivacyPage() {
       </section>
 
       <section id="information">
-        <h2>2. Información que podríamos tratar</h2>
+        <h2>2. Información que podemos tratar</h2>
         <p>
-          El sitio no procesa ni almacena directamente los campos del formulario. Contact prepara un borrador en la aplicación de correo del visitante. La información solo se remite a Nyvora cuando la persona decide enviar ese correo; en ese momento podríamos recibir su nombre, organización, dirección de correo, motivo de contacto y mensaje.
+          Cuando usted envía una consulta mediante Contact, el sitio transmite a Nyvora el nombre, la organización, la dirección de correo, el motivo de contacto y el mensaje que haya proporcionado. El formulario no solicita credenciales, información financiera ni registros de clientes.
         </p>
         <p>
           La infraestructura de alojamiento y seguridad del sitio podría tratar datos técnicos básicos, como la dirección IP, información del navegador o dispositivo, páginas solicitadas, marcas de tiempo y registros de diagnóstico o seguridad. Los datos concretos dependerán de la configuración y de los proveedores que finalmente se seleccionen.
@@ -49,10 +50,10 @@ export default function PrivacyPage() {
       <section id="providers">
         <h2>4. Proveedores de servicios y divulgación</h2>
         <p>
-          La entrega, recepción y almacenamiento de los mensajes puede involucrar a los servicios de correo utilizados por el remitente y por Nyvora, sujetos a las condiciones que correspondan. También podríamos facilitar información a proveedores que apoyen el alojamiento, la seguridad o las comunicaciones empresariales, o divulgarla cuando lo exija la ley o sea razonablemente necesario para proteger derechos, integridad o seguridad.
+          Vercel proporciona el alojamiento y la función que recibe la consulta. Google Workspace proporciona el correo corporativo al que se entrega el mensaje. Estos proveedores pueden tratar la información y los datos técnicos necesarios para prestar sus servicios, sujetos a sus condiciones y a los acuerdos aplicables.
         </p>
         <p>
-          Los proveedores definitivos no se han confirmado para todas las funciones. Este aviso deberá actualizarse antes de conectar un envío directo desde el sitio, una herramienta de analítica, un sistema de gestión de relaciones o cualquier otro servicio adicional que trate datos.
+          Nyvora también podría divulgar información cuando lo exija la ley o cuando sea razonablemente necesario para proteger derechos, integridad o seguridad. Este aviso deberá actualizarse antes de incorporar analítica, un sistema de gestión de relaciones u otro servicio adicional que trate datos.
         </p>
       </section>
 
@@ -66,21 +67,21 @@ export default function PrivacyPage() {
       <section id="retention">
         <h2>6. Conservación</h2>
         <p>
-          Nuestra intención es conservar la información solo durante el tiempo razonablemente necesario para los fines descritos, incluidas las necesidades legales, de seguridad y de registro que resulten aplicables. La conservación podrá variar según el tipo de registro. Los plazos específicos deberán definirse cuando se confirmen el flujo de datos y los proveedores de producción.
+          Nyvora no mantiene una base de datos separada de consultas dentro del sitio. Los mensajes pueden conservarse en el buzón corporativo durante el tiempo razonablemente necesario para atenderlos y cumplir necesidades legales, de seguridad o de registro. No se publica un plazo fijo hasta completar la revisión jurídica y operativa correspondiente.
         </p>
       </section>
 
       <section id="security">
         <h2>7. Seguridad</h2>
         <p>
-          Las medidas aplicables dependerán de la información tratada y de los servicios que finalmente se utilicen. Antes de publicar el sitio, estas medidas y su descripción deberán revisarse junto con el flujo de datos confirmado.
+          El formulario transmite la consulta al sitio mediante HTTPS y limita los datos y el tamaño de los mensajes aceptados. Ningún método de transmisión o almacenamiento puede garantizarse como completamente seguro. Las medidas y su descripción deberán revisarse junto con el flujo de datos de producción.
         </p>
       </section>
 
       <section id="rights">
         <h2>8. Sus opciones y derechos</h2>
         <p>
-          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. Para formular una solicitud, escriba a <a href={`mailto:${SITE.emails.privacy}?subject=Solicitud%20de%20privacidad`}>{SITE.emails.privacy}</a>. Podría ser necesario verificar la identidad de la persona solicitante.
+          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. Para formular una solicitud, use <Link href="/contact">Contact</Link>, seleccione «Privacidad» e indique el contexto necesario. El canal se dirige a {SITE.emails.privacy}. Podría ser necesario verificar la identidad de la persona solicitante.
         </p>
       </section>
 
@@ -94,7 +95,7 @@ export default function PrivacyPage() {
       <section id="contact">
         <h2>10. Contacto</h2>
         <p>
-          Para consultas o solicitudes relacionadas con privacidad, escriba a <a href={`mailto:${SITE.emails.privacy}?subject=Solicitud%20de%20privacidad`}>{SITE.emails.privacy}</a>. Nyvora Technologies, {SITE.location}.
+          Para consultas o solicitudes relacionadas con privacidad, use <Link href="/contact">Contact</Link> y seleccione «Privacidad». El mensaje se dirige a {SITE.emails.privacy}. Nyvora Technologies, {SITE.location}.
         </p>
         <p>
           La revisión jurídica deberá confirmar la entidad legal responsable, las bases jurídicas aplicables, los derechos de los visitantes según su ubicación, las salvaguardas para transferencias internacionales, los criterios de conservación y el procedimiento aplicable a las solicitudes de privacidad.

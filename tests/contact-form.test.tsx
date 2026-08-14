@@ -1,11 +1,10 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ContactForm } from "@/components/ContactForm";
 
-async function completeForm(reason: "myke" | "support") {
+async function completeForm(reason = "myke") {
   const user = userEvent.setup();
-  render(<ContactForm />);
 
   await user.selectOptions(screen.getByLabelText("Motivo de contacto"), reason);
   await user.type(screen.getByLabelText("Nombre"), "Persona de prueba");
@@ -20,12 +19,19 @@ async function completeForm(reason: "myke" | "support") {
   return user;
 }
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
 describe("contact form", () => {
-  it("shows the approved Spanish reasons and explains the email-draft flow", () => {
+  it("shows the approved reasons and explains direct website delivery", () => {
     const { container } = render(<ContactForm />);
 
-    expect(screen.getByRole("note")).toHaveTextContent(/prepara un borrador/i);
-    expect(screen.getByRole("note")).toHaveTextContent(/decida enviarlo/i);
+    expect(screen.getByRole("note")).toHaveTextContent(
+      /envía su consulta directamente desde este sitio/i,
+    );
+    expect(screen.getByRole("note")).toHaveTextContent(/sin abrir una aplicación externa/i);
 
     const reason = screen.getByLabelText("Motivo de contacto");
     const reasons = within(reason)
@@ -39,67 +45,109 @@ describe("contact form", () => {
       "Oportunidades comerciales",
       "Alianzas",
       "Soporte",
+      "Privacidad",
+      "Asuntos legales",
       "Otro",
     ]);
-    expect(screen.getByRole("option", { name: "Soporte" })).toHaveValue("support");
     expect(container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
   });
 
-  it("associates required-field errors with accessible controls", async () => {
+  it("validates accessible required fields without calling the API", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
     render(<ContactForm />);
 
-    await user.click(screen.getByRole("button", { name: "Preparar correo" }));
+    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
 
-    const reason = screen.getByLabelText("Motivo de contacto");
-    const name = screen.getByLabelText("Nombre");
-    const organization = screen.getByLabelText("Organización");
-    const email = screen.getByLabelText("Correo");
-    const message = screen.getByLabelText("Mensaje");
-    const consent = screen.getByRole("checkbox", { name: /aviso de privacidad/i });
-
-    [reason, name, organization, email, message, consent].forEach((control) => {
+    const controls = [
+      screen.getByLabelText("Motivo de contacto"),
+      screen.getByLabelText("Nombre"),
+      screen.getByLabelText("Organización"),
+      screen.getByLabelText("Correo"),
+      screen.getByLabelText("Mensaje"),
+      screen.getByRole("checkbox", { name: /aviso de privacidad/i }),
+    ];
+    controls.forEach((control) => {
       expect(control).toHaveAttribute("aria-invalid", "true");
       expect(control).toBeRequired();
     });
     expect(screen.getByText(/revise los campos señalados/i)).toBeInTheDocument();
-    expect(name).toHaveFocus();
+    expect(screen.getByLabelText("Nombre")).toHaveFocus();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ["myke", "contact@nyvoratechnologies.com", "Información sobre Myke"],
-    ["support", "support@nyvoratechnologies.com", "Soporte"],
-  ] as const)("routes %s inquiries to the approved mailbox", async (reason, recipient, reasonLabel) => {
-    const user = await completeForm(reason);
-
-    await user.click(screen.getByRole("button", { name: "Preparar correo" }));
-
-    const link = await screen.findByRole("link", { name: /abrir borrador en correo/i });
-    const href = link.getAttribute("href");
-    expect(href).toBeTruthy();
-    expect(href).toMatch(new RegExp(`^mailto:${recipient.replace(".", "\\.")}\\?`));
-
-    const parameters = new URLSearchParams(href?.split("?")[1]);
-    expect(parameters.get("subject")).toContain(reasonLabel);
-    expect(parameters.get("body")).toContain("Nombre: Persona de prueba");
-    expect(parameters.get("body")).toContain("Organización: Institución de ejemplo");
-    expect(parameters.get("body")).toContain("Correo de respuesta: persona@example.org");
-    expect(parameters.get("body")).toContain(`Motivo: ${reasonLabel}`);
-    expect(parameters.get("body")).toContain("Queremos conocer más sobre Nyvora");
-    expect(screen.getByText(new RegExp(`borrador preparado para ${recipient}`, "i"))).toHaveTextContent(
-      /aún no ha recibido el mensaje/i,
+  it("posts a valid inquiry and reports success only after the API accepts it", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
     );
-    expect(screen.queryByText(/enviado correctamente|mensaje recibido/i)).not.toBeInTheDocument();
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm />);
+    const user = await completeForm("support");
+
+    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
+
+    expect(await screen.findByText(/aceptado para envío/i)).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, options] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(String(options.body));
+    expect(url).toBe("/api/contact");
+    expect(options.method).toBe("POST");
+    expect(body).toMatchObject({
+      name: "Persona de prueba",
+      organization: "Institución de ejemplo",
+      email: "persona@example.org",
+      reason: "support",
+      consent: true,
+    });
+    expect(body).not.toHaveProperty("recipient");
+    expect(screen.getByLabelText("Nombre")).toHaveValue("");
   });
 
-  it("invalidates a prepared draft when a field changes", async () => {
-    const user = await completeForm("myke");
-    await user.click(screen.getByRole("button", { name: "Preparar correo" }));
-    expect(await screen.findByRole("link", { name: /abrir borrador en correo/i })).toBeInTheDocument();
+  it("preserves the form when delivery fails and never reports false success", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ ok: false, code: "delivery_failed" }), {
+        status: 502,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm />);
+    const user = await completeForm();
 
-    await user.type(screen.getByLabelText("Nombre"), " A");
+    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
 
-    expect(screen.queryByRole("link", { name: /abrir borrador en correo/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Preparar correo" })).toBeInTheDocument();
+    expect(await screen.findByText(/no pudimos enviar el mensaje/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Nombre")).toHaveValue("Persona de prueba");
+    expect(screen.queryByText(/aceptado para envío/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Enviar mensaje" })).toBeEnabled();
+  });
+
+  it("prevents duplicate submissions while a request is pending", async () => {
+    let resolveRequest!: (response: Response) => void;
+    const pendingResponse = new Promise<Response>((resolve) => {
+      resolveRequest = resolve;
+    });
+    const fetchMock = vi.fn().mockReturnValue(pendingResponse);
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm />);
+    const user = await completeForm();
+
+    const submit = screen.getByRole("button", { name: "Enviar mensaje" });
+    await user.click(submit);
+    expect(screen.getByRole("button", { name: "Enviando…" })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Enviando…" }));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    resolveRequest(
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    expect(await screen.findByText(/aceptado para envío/i)).toBeInTheDocument();
   });
 });

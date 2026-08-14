@@ -53,7 +53,8 @@
   min-width: 0;
 }
 
-.linkGroup a {
+.linkGroup a,
+.linkGroup span {
   overflow-wrap: anywhere;
   color: var(--muted);
   font-size: 0.86rem;

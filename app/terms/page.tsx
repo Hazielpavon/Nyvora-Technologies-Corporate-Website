@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/Primitives";
 import { createPageMetadata, SITE } from "@/lib/site";
 
@@ -107,7 +108,7 @@ export default function TermsPage() {
       <section id="contact">
         <h2>12. Contacto</h2>
         <p>
-          Para formular consultas sobre estos términos, escriba a <a href={`mailto:${SITE.emails.legal}?subject=Consulta%20sobre%20los%20términos%20de%20uso`}>{SITE.emails.legal}</a>.
+          Para formular consultas sobre estos términos, use <Link href="/contact">Contact</Link>, seleccione «Asuntos legales» y envíe su mensaje. El canal se dirige a {SITE.emails.legal}.
         </p>
       </section>
     </LegalPage>

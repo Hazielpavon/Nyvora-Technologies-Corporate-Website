@@ -28,18 +28,23 @@ describe("critical page rendering", () => {
     expect(container.innerHTML).not.toMatch(/@nyvoratechnologies\.com\.test-|security@nyvoratechnologies\.com/i);
   });
 
-  it("exposes the confirmed mailbox for each public contact context", () => {
+  it("routes public contact contexts through the website without mailto links", () => {
     const contact = render(<ContactPage />);
-    expect(contact.container.querySelector('a[href="mailto:contact@nyvoratechnologies.com"]')).toBeInTheDocument();
-    expect(contact.container.querySelector('a[href="mailto:support@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(contact.container).toHaveTextContent("contact@nyvoratechnologies.com");
+    expect(contact.container).toHaveTextContent("support@nyvoratechnologies.com");
+    expect(contact.container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
     contact.unmount();
 
     const privacy = render(<PrivacyPage />);
-    expect(privacy.container.querySelector('a[href^="mailto:privacy@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(privacy.container).toHaveTextContent("privacy@nyvoratechnologies.com");
+    expect(privacy.container.querySelector('a[href="/contact"]')).toBeInTheDocument();
+    expect(privacy.container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
     privacy.unmount();
 
     const terms = render(<TermsPage />);
-    expect(terms.container.querySelector('a[href^="mailto:legal@nyvoratechnologies.com"]')).toBeInTheDocument();
+    expect(terms.container).toHaveTextContent("legal@nyvoratechnologies.com");
+    expect(terms.container.querySelector('a[href="/contact"]')).toBeInTheDocument();
+    expect(terms.container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
     terms.unmount();
   });
 
@@ -53,5 +58,19 @@ describe("critical page rendering", () => {
     render(<HomePage />);
 
     expect(screen.getAllByText(/Tegucigalpa, Honduras/i).length).toBeGreaterThan(0);
+  });
+
+  it("explains Myke through concrete, conditional use cases", () => {
+    render(<MykePage />);
+
+    [
+      "Consultar información",
+      "Comprender movimientos",
+      "Preparar solicitudes",
+      "Encontrar el siguiente paso",
+    ].forEach((capability) => {
+      expect(screen.getByRole("heading", { level: 3, name: capability })).toBeInTheDocument();
+    });
+    expect(screen.getByText(/no sustituye las decisiones, autorizaciones ni canales/i)).toBeInTheDocument();
   });
 });

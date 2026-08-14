@@ -33,6 +33,47 @@
   margin-top: 22px;
 }
 
+.useCaseList {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.useCaseList li {
+  display: grid;
+  grid-template-columns: 48px minmax(190px, 0.65fr) minmax(0, 1.35fr);
+  gap: clamp(22px, 4vw, 56px);
+  align-items: start;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 30px 0;
+}
+
+.useCaseList span {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.useCaseList h3,
+.useCaseList p {
+  margin: 0;
+}
+
+.useCaseList h3 {
+  color: var(--text);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-weight: 580;
+  letter-spacing: -0.025em;
+}
+
+.useCaseList p {
+  max-width: 60ch;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -117,6 +158,14 @@
   color: var(--cyan);
 }
 
+.contactBlock .contactEmail {
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+
 .finalCta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -157,5 +206,15 @@
 
   .featureGrid h3 {
     margin-top: 26px;
+  }
+
+  .useCaseList li {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px 18px;
+    padding: 26px 0;
+  }
+
+  .useCaseList p {
+    grid-column: 2;
   }
 }

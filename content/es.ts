@@ -53,3 +53,26 @@ export const mykeBenefits = [
       "Funciona junto con los servicios y capacidades que cada institución decida habilitar.",
   },
 ] as const;
+
+export const mykeCapabilities = [
+  {
+    title: "Consultar información",
+    description:
+      "Permite formular preguntas con palabras cotidianas y recibir la información que la institución haya habilitado dentro de la experiencia.",
+  },
+  {
+    title: "Comprender movimientos",
+    description:
+      "Ayuda a presentar conceptos, fechas y referencias de forma ordenada para facilitar la interpretación de la información disponible.",
+  },
+  {
+    title: "Preparar solicitudes",
+    description:
+      "Acompaña la recopilación de los datos necesarios y ayuda a identificar información pendiente antes de continuar con una solicitud.",
+  },
+  {
+    title: "Encontrar el siguiente paso",
+    description:
+      "Orienta a la persona hacia las opciones disponibles o hacia el canal correspondiente cuando una gestión requiere atención de la institución.",
+  },
+] as const;

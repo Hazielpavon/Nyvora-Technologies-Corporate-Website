@@ -39,8 +39,8 @@ export function SiteFooter() {
 
         <div className={styles.linkGroup}>
           <p className={styles.linkHeading}>Contacto</p>
-          <a href={`mailto:${SITE.emails.contact}`}>{SITE.emails.contact}</a>
-          <a href={`mailto:${SITE.emails.support}`}>{SITE.emails.support}</a>
+          <span>{SITE.emails.contact}</span>
+          <span>{SITE.emails.support}</span>
         </div>
       </div>
       <div className={`site-container ${styles.bottom}`}>

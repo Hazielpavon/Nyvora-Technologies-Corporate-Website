@@ -1,103 +1,146 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  contactFields,
   contactReasons,
-  createContactDraft,
-  isContactReason,
-  type ContactDraftInput,
+  validateContactSubmission,
+  type ContactFieldErrors,
+  type ContactFieldName,
 } from "@/lib/contact";
 import styles from "./ContactForm.module.css";
 
-const fields = ["name", "organization", "email", "reason", "message", "consent"] as const;
-type FieldName = (typeof fields)[number];
-type FieldErrors = Partial<Record<FieldName, string>>;
-type FormStatus = "idle" | "validating" | "error" | "ready";
-type ContactDraft = ReturnType<typeof createContactDraft>;
+type FormStatus = "idle" | "submitting" | "success" | "error";
 
-function validate(formData: FormData): FieldErrors {
-  const errors: FieldErrors = {};
-  const name = String(formData.get("name") ?? "").trim();
-  const organization = String(formData.get("organization") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const reason = String(formData.get("reason") ?? "").trim();
-  const message = String(formData.get("message") ?? "").trim();
-  const consent = formData.get("consent");
-
-  if (name.length < 2) errors.name = "Ingrese su nombre.";
-  if (organization.length < 2) errors.organization = "Ingrese el nombre de su organización.";
-  if (!/^\S+@\S+\.\S+$/.test(email)) errors.email = "Ingrese un correo válido.";
-  if (!isContactReason(reason)) errors.reason = "Seleccione un motivo de contacto.";
-  if (message.length < 20) errors.message = "Incluya al menos 20 caracteres para explicar su interés.";
-  if (message.length > 2000) errors.message = "El mensaje no puede superar los 2,000 caracteres.";
-  if (consent !== "on") errors.consent = "Confirme que ha leído el Aviso de privacidad.";
-
-  return errors;
-}
-
-function getDraftInput(formData: FormData): ContactDraftInput {
-  const reason = String(formData.get("reason") ?? "");
-
-  if (!isContactReason(reason)) {
-    throw new Error("Motivo de contacto no válido.");
-  }
-
+function getRequestData(formData: FormData) {
   return {
     name: String(formData.get("name") ?? ""),
     organization: String(formData.get("organization") ?? ""),
     email: String(formData.get("email") ?? ""),
-    reason,
+    reason: String(formData.get("reason") ?? ""),
     message: String(formData.get("message") ?? ""),
+    consent: formData.get("consent") === "on",
+    website: String(formData.get("website") ?? ""),
   };
 }
 
-export function ContactForm() {
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [status, setStatus] = useState<FormStatus>("idle");
-  const [draft, setDraft] = useState<ContactDraft | null>(null);
+function getServerFieldErrors(value: unknown): ContactFieldErrors {
+  if (!value || typeof value !== "object") return {};
+  const source = value as Record<string, unknown>;
+  const errors: ContactFieldErrors = {};
 
-  const clearError = (field: FieldName) => {
+  contactFields.forEach((field) => {
+    if (typeof source[field] === "string") errors[field] = source[field];
+  });
+
+  return errors;
+}
+
+export function ContactForm() {
+  const submissionInProgress = useRef(false);
+  const [errors, setErrors] = useState<ContactFieldErrors>({});
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [statusMessage, setStatusMessage] = useState(
+    "Complete los campos para enviar su consulta a Nyvora.",
+  );
+
+  const clearError = (field: ContactFieldName) => {
     setErrors((current) => {
       if (!current[field]) return current;
       const next = { ...current };
       delete next[field];
       return next;
     });
-    setDraft(null);
-    if (status !== "idle") setStatus("idle");
+    if (status !== "idle" && status !== "submitting") {
+      setStatus("idle");
+      setStatusMessage("Complete los campos para enviar su consulta a Nyvora.");
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const focusFirstInvalidField = (
+    form: HTMLFormElement,
+    fieldErrors: ContactFieldErrors,
+  ) => {
+    const firstInvalidField = contactFields.find((field) => fieldErrors[field]);
+    if (!firstInvalidField) return;
+    const element = form.elements.namedItem(firstInvalidField);
+    if (element instanceof HTMLElement) element.focus();
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus("validating");
+    if (submissionInProgress.current) return;
 
     const form = event.currentTarget;
-    const formData = new FormData(form);
-    const nextErrors = validate(formData);
-    setErrors(nextErrors);
+    const requestData = getRequestData(new FormData(form));
+    const validation = validateContactSubmission(requestData);
 
-    const firstInvalidField = fields.find((field) => nextErrors[field]);
-    if (firstInvalidField) {
-      setDraft(null);
+    if (!validation.ok) {
+      setErrors(validation.fieldErrors);
       setStatus("error");
-      const element = form.elements.namedItem(firstInvalidField);
-      if (element instanceof HTMLElement) element.focus();
+      setStatusMessage("Revise los campos señalados. El mensaje no se ha enviado.");
+      focusFirstInvalidField(form, validation.fieldErrors);
       return;
     }
 
-    setDraft(createContactDraft(getDraftInput(formData)));
-    setStatus("ready");
+    setErrors({});
+    submissionInProgress.current = true;
+    setStatus("submitting");
+    setStatusMessage("Enviando su mensaje…");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+      const result = await response.json().catch(() => null) as
+        | { ok?: boolean; code?: string; fieldErrors?: unknown }
+        | null;
+
+      if (response.ok && result?.ok === true) {
+        form.reset();
+        setStatus("success");
+        setStatusMessage(
+          "Su mensaje fue aceptado para envío a Nyvora.",
+        );
+        return;
+      }
+
+      if (response.status === 400) {
+        const serverErrors = getServerFieldErrors(result?.fieldErrors);
+        setErrors(serverErrors);
+        setStatus("error");
+        setStatusMessage("Revise los campos señalados. El mensaje no se ha enviado.");
+        focusFirstInvalidField(form, serverErrors);
+        return;
+      }
+
+      setStatus("error");
+      setStatusMessage(
+        response.status === 503
+          ? "El canal de envío está temporalmente no disponible. Intente nuevamente más tarde."
+          : "No pudimos enviar el mensaje. Sus datos permanecen en el formulario para que pueda intentarlo de nuevo.",
+      );
+    } catch {
+      setStatus("error");
+      setStatusMessage(
+        "No pudimos conectar con el canal de envío. Sus datos permanecen en el formulario para que pueda intentarlo de nuevo.",
+      );
+    } finally {
+      submissionInProgress.current = false;
+    }
   };
 
-  const isBusy = status === "validating";
+  const isSubmitting = status === "submitting";
 
   return (
     <form className={styles.form} noValidate onSubmit={handleSubmit}>
       <div className={styles.notice} role="note">
-        <strong>Contacto por correo electrónico.</strong>
+        <strong>Contacto directo con Nyvora.</strong>
         <p>
-          Este formulario prepara un borrador en su aplicación de correo. Nyvora no recibe el contenido hasta que usted revise el mensaje y decida enviarlo.
+          El formulario envía su consulta directamente desde este sitio al canal correspondiente, sin abrir una aplicación externa.
         </p>
       </div>
 
@@ -109,6 +152,7 @@ export function ContactForm() {
             name="name"
             type="text"
             autoComplete="name"
+            maxLength={100}
             required
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
@@ -124,6 +168,7 @@ export function ContactForm() {
             name="organization"
             type="text"
             autoComplete="organization"
+            maxLength={120}
             required
             aria-invalid={Boolean(errors.organization)}
             aria-describedby={errors.organization ? "organization-error" : undefined}
@@ -141,6 +186,7 @@ export function ContactForm() {
           type="email"
           inputMode="email"
           autoComplete="email"
+          maxLength={254}
           required
           aria-invalid={Boolean(errors.email)}
           aria-describedby={`email-help${errors.email ? " email-error" : ""}`}
@@ -188,6 +234,11 @@ export function ContactForm() {
         {errors.message ? <p id="message-error" className={styles.fieldError}>{errors.message}</p> : null}
       </div>
 
+      <div className={styles.honeypot} aria-hidden="true">
+        <label htmlFor="website">Sitio web</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className={styles.consentField}>
         <input
           id="consent"
@@ -199,37 +250,23 @@ export function ContactForm() {
           onChange={() => clearError("consent")}
         />
         <label htmlFor="consent">
-          He leído el <Link href="/privacy">Aviso de privacidad del sitio web</Link> y comprendo cómo se usará la información incluida en el correo para responder a mi consulta.
+          He leído el <Link href="/privacy">Aviso de privacidad del sitio web</Link> y acepto que Nyvora trate la información proporcionada para atender mi consulta.
         </label>
         {errors.consent ? <p id="consent-error" className={styles.fieldError}>{errors.consent}</p> : null}
       </div>
 
       <div
-        className={`${styles.status} ${status === "error" ? styles.statusError : ""} ${status === "ready" ? styles.statusReady : ""}`}
+        className={`${styles.status} ${status === "error" ? styles.statusError : ""} ${status === "success" ? styles.statusReady : ""}`}
         aria-live="polite"
         aria-atomic="true"
       >
-        {status === "idle" ? "Estado del formulario: listo para preparar un correo." : null}
-        {status === "validating" ? "Revisando los campos requeridos…" : null}
-        {status === "error"
-          ? "Revise los campos señalados. No se ha preparado ningún correo."
-          : null}
-        {status === "ready" && draft
-          ? `Borrador preparado para ${draft.recipient}. Nyvora aún no ha recibido el mensaje; ábralo y envíelo desde su aplicación de correo.`
-          : null}
+        {statusMessage}
       </div>
 
-      {draft ? (
-        <a className={styles.submitButton} href={draft.href}>
-          Abrir borrador en correo
-          <span aria-hidden="true">→</span>
-        </a>
-      ) : (
-        <button className={styles.submitButton} type="submit" disabled={isBusy}>
-          {isBusy ? "Revisando…" : "Preparar correo"}
-          <span aria-hidden="true">→</span>
-        </button>
-      )}
+      <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Enviando…" : "Enviar mensaje"}
+        <span aria-hidden="true">→</span>
+      </button>
     </form>
   );
 }
