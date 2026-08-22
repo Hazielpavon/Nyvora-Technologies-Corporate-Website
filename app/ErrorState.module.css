@@ -1,0 +1,134 @@
+.errorSection,
+.globalMain {
+  min-height: 68vh;
+  display: grid;
+  place-items: center;
+  padding: 96px 0;
+  color: #f4f8fc;
+  background:
+    linear-gradient(90deg, rgba(50, 118, 255, 0.07) 1px, transparent 1px) 0 0 / 88px 88px,
+    radial-gradient(circle at 78% 18%, rgba(50, 118, 255, 0.12), transparent 32rem),
+    #050b14;
+}
+
+.globalBody {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color-scheme: dark;
+  background: #050b14;
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.globalMain {
+  min-height: 100vh;
+}
+
+.errorCard {
+  width: min(100% - 40px, 760px);
+  border: 1px solid rgba(159, 190, 221, 0.28);
+  border-top: 3px solid #3bd6ff;
+  border-radius: 7px;
+  padding: clamp(32px, 7vw, 64px);
+  background: rgba(10, 22, 37, 0.96);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.28);
+}
+
+.eyebrow {
+  margin: 0;
+  color: #3bd6ff;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.errorCard h1 {
+  max-width: 14ch;
+  margin: 22px 0 24px;
+  color: #f4f8fc;
+  font-size: clamp(2.5rem, 6vw, 4.8rem);
+  font-weight: 570;
+  letter-spacing: -0.052em;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  max-width: 590px;
+  margin: 0;
+  color: #b6c5d4;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.retryButton,
+.homeLink {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 0 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.retryButton {
+  border: 1px solid #3bd6ff;
+  color: #001018;
+  background: #3bd6ff;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background: #7ce6ff;
+}
+
+.homeLink {
+  border: 1px solid rgba(159, 190, 221, 0.28);
+  color: #f4f8fc;
+  background: #07111d;
+}
+
+.homeLink:hover {
+  border-color: #3bd6ff;
+}
+
+.retryButton:focus-visible,
+.homeLink:focus-visible {
+  outline: 2px solid #3bd6ff;
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .errorSection,
+  .globalMain {
+    padding: 64px 0;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retryButton,
+  .homeLink {
+    transition: none;
+  }
+}
