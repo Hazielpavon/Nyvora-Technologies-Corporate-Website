@@ -45,7 +45,7 @@ test("primary navigation works on desktop and mobile", async ({ page }) => {
   await menuButton.click();
   await expect(menuButton).toHaveAttribute("aria-expanded", "true");
   const mobileNavigation = page.getByRole("navigation", { name: "Navegación principal" });
-  await expect(mobileNavigation.getByRole("link", { name: "Company" })).toBeFocused();
+  await expect(mobileNavigation.getByRole("link", { name: "Empresa" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(menuButton).toBeFocused();
   await expect(menuButton).toHaveAttribute("aria-expanded", "false");
@@ -117,14 +117,29 @@ test("draft legal pages are noindex and unknown routes return the custom 404", a
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
-test("important routes have no automated WCAG A or AA violations", async ({ page }) => {
-  for (const route of ["/", "/myke", "/contact"] as const) {
-    await page.goto(route);
-    const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-      .analyze();
-    expect(results.violations, route).toEqual([]);
+test("important routes have no automated WCAG A or AA violations in light and dark mode", async ({ page }) => {
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ colorScheme });
+    for (const route of ["/", "/myke", "/contact", "/privacy"] as const) {
+      await page.goto(route);
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+      expect(results.violations, `${route} (${colorScheme})`).toEqual([]);
+    }
   }
+});
+
+test("the official logo follows the visitor's color scheme", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const brand = page.getByRole("link", { name: /Nyvora Technologies, página principal/i }).first();
+  await expect(brand.locator("img.logo-on-light")).toBeVisible();
+  await expect(brand.locator("img.logo-on-dark")).toBeHidden();
+
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(brand.locator("img.logo-on-dark")).toBeVisible();
+  await expect(brand.locator("img.logo-on-light")).toBeHidden();
 });
 
 test("unsupported contact methods are rejected", async ({ request }) => {

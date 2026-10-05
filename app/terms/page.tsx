@@ -111,7 +111,7 @@ export default function TermsPage() {
       <section id="contact">
         <h2>12. Contacto</h2>
         <p>
-          Para formular consultas sobre estos términos, use <Link href="/contact">Contact</Link>, seleccione «Asuntos legales» y envíe su mensaje. El canal se dirige a {SITE.emails.legal}.
+          Para formular consultas sobre estos términos, use <Link href="/contact">Contacto</Link>, seleccione «Asuntos legales» y envíe su mensaje. El canal se dirige a {SITE.emails.legal}.
         </p>
       </section>
     </LegalPage>

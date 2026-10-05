@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -35,7 +36,12 @@ if (isVercelProduction) {
   });
 }
 
+// Pin the project root so Next.js never picks up a lockfile from a parent folder.
+const projectRoot = path.resolve(import.meta.dirname);
+
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

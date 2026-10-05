@@ -60,10 +60,24 @@ describe("critical page rendering", () => {
     ).rejects.toThrow();
   });
 
-  it("presents the company location on Company", () => {
+  it("presents the company location on the Empresa page", () => {
     render(<HomePage />);
 
     expect(screen.getAllByText(/Tegucigalpa, Honduras/i).length).toBeGreaterThan(0);
+  });
+
+  it("keeps a single label for each call-to-action intent and no em dashes", () => {
+    [HomePage, MykePage, ContactPage].forEach((Page) => {
+      const { container, unmount } = render(<Page />);
+      expect(container.textContent).not.toMatch(/[—–]/);
+      expect(container.textContent).not.toMatch(/(?:Contactar a Nyvora|Iniciar una conversación|Get in touch)/i);
+      unmount();
+    });
+  });
+
+  it("labels the Myke conversation preview as illustrative sample data", () => {
+    const { container } = render(<HomePage />);
+    expect(container).toHaveTextContent(/conversación ilustrativa\. los datos mostrados son de ejemplo/i);
   });
 
   it.each([
@@ -80,18 +94,10 @@ describe("critical page rendering", () => {
     const { container } = render(<MykePage />);
 
     expect(
-      Array.from(container.querySelectorAll("dt"), (term) => term.textContent),
+      Array.from(container.querySelectorAll("[data-myke-facts] dt"), (term) => term.textContent),
     ).toEqual(["Qué es", "Para quién", "Qué cambia"]);
 
-    expect(
-      screen.getAllByText(/^0[1-5] \/ /).map((label) => label.textContent),
-    ).toEqual([
-      "01 / El punto de partida",
-      "02 / Qué hace Myke",
-      "03 / Junto a la banca existente",
-      "04 / Del lenguaje a una acción comprensible",
-      "05 / Diseñado para diferentes instituciones",
-    ]);
+    expect(screen.queryAllByText(/^0[1-5] \/ /)).toHaveLength(0);
 
     expect(
       screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
@@ -119,7 +125,9 @@ describe("critical page rendering", () => {
     expect(container).toHaveTextContent(/el control permanece en la institución/i);
     expect(container).toHaveTextContent(/no mueve fondos por sí solo/i);
     expect(container).toHaveTextContent(/depende de la información, los servicios y los procesos habilitados/i);
-    expect(screen.getByRole("link", { name: /hablar con nyvora/i })).toHaveAttribute("href", "/contact");
+    const contactLinks = screen.getAllByRole("link", { name: /hablar con nyvora/i });
+    expect(contactLinks.length).toBeGreaterThan(0);
+    contactLinks.forEach((link) => expect(link).toHaveAttribute("href", "/contact"));
 
     const structuredData = container.querySelector('script[type="application/ld+json"]');
     expect(structuredData).toBeInTheDocument();

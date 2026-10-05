@@ -1,9 +1,9 @@
+import { ChatsCircle, Lifebuoy, MapPin, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
 import { PageHero } from "@/components/Primitives";
 import { createPageMetadata, SITE } from "@/lib/site";
-import styles from "../Pages.module.css";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contacto",
@@ -16,44 +16,50 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contact / Nyvora Technologies"
         title="Un solo punto de contacto."
-        intro="Esta sección reúne las consultas sobre Nyvora Technologies, Myke, oportunidades, alianzas y soporte."
-        aside={
-          <p>
-            Consultas generales
-            <br />
-            Oportunidades y alianzas
-            <br />
-            Soporte
-          </p>
-        }
+        intro="Consultas sobre Nyvora Technologies, Myke, oportunidades, alianzas y soporte, en un mismo lugar."
       />
 
-      <section className="section">
-        <div className={`site-container ${styles.contactGrid}`}>
-          <ContactForm />
-          <aside className={styles.contactSidebar} aria-label="Información del canal de contacto">
-            <div className={styles.contactBlock}>
-              <h2>Consultas generales</h2>
-              <p>
+      <section aria-label="Formulario y canales de contacto" className="pb-24 md:pb-32">
+        <div className="site-container grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <ContactForm />
+          </div>
+          <aside
+            className="flex flex-col gap-10 lg:col-span-4 lg:col-start-9"
+            aria-label="Información del canal de contacto"
+          >
+            <div>
+              <ChatsCircle aria-hidden="true" size={26} weight="duotone" className="text-accent-ink" />
+              <h2 className="mt-4 text-lg font-semibold text-ink">Consultas generales</h2>
+              <p className="mt-2 leading-relaxed text-ink-soft">
                 Información sobre Nyvora, Myke, oportunidades comerciales y alianzas.
               </p>
-              <p className={styles.contactEmail}>{SITE.emails.contact}</p>
+              <p className="mt-3 break-all font-mono text-sm text-ink">{SITE.emails.contact}</p>
             </div>
-            <div className={styles.contactBlock}>
-              <h2>Soporte</h2>
-              <p>Ayuda relacionada con productos o servicios de Nyvora.</p>
-              <p className={styles.contactEmail}>{SITE.emails.support}</p>
+            <div>
+              <Lifebuoy aria-hidden="true" size={26} weight="duotone" className="text-accent-ink" />
+              <h2 className="mt-4 text-lg font-semibold text-ink">Soporte</h2>
+              <p className="mt-2 leading-relaxed text-ink-soft">Ayuda relacionada con productos o servicios de Nyvora.</p>
+              <p className="mt-3 break-all font-mono text-sm text-ink">{SITE.emails.support}</p>
             </div>
-            <div className={styles.contactBlock}>
-              <h2>Ubicación</h2>
-              <address>{SITE.location}</address>
+            <div>
+              <MapPin aria-hidden="true" size={26} weight="duotone" className="text-accent-ink" />
+              <h2 className="mt-4 text-lg font-semibold text-ink">Ubicación</h2>
+              <address className="mt-2 not-italic text-ink-soft">{SITE.location}</address>
             </div>
-            <div className={styles.contactBlock}>
-              <h2>Privacidad</h2>
-              <p>Conozca cómo se trata la información compartida mediante el sitio.</p>
-              <Link href="/privacy">Aviso de privacidad</Link>
+            <div className="border-t border-line pt-8">
+              <ShieldCheck aria-hidden="true" size={26} weight="duotone" className="text-accent-ink" />
+              <h2 className="mt-4 text-lg font-semibold text-ink">Privacidad</h2>
+              <p className="mt-2 leading-relaxed text-ink-soft">
+                Conozca cómo se trata la información compartida mediante el sitio.
+              </p>
+              <Link
+                className="mt-3 inline-block text-accent-ink underline underline-offset-4"
+                href="/privacy"
+              >
+                Aviso de privacidad
+              </Link>
             </div>
           </aside>
         </div>
