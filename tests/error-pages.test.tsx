@@ -18,7 +18,7 @@ describe("error fallbacks", () => {
       screen.getByRole("heading", { level: 1, name: "No pudimos mostrar esta página." }),
     ).toBeInTheDocument();
     expect(container).not.toHaveTextContent(privateError.message);
-    expect(screen.getByRole("link", { name: "Volver a Company" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Volver al inicio" })).toHaveAttribute("href", "/");
 
     await user.click(screen.getByRole("button", { name: "Intentar de nuevo" }));
     expect(retry).toHaveBeenCalledOnce();

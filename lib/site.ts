@@ -44,7 +44,7 @@ export function createPageMetadata({
           url: "/og-es.png",
           width: 1732,
           height: 908,
-          alt: "Nyvora Technologies — Tecnología creada en Honduras.",
+          alt: "Nyvora Technologies. Tecnología creada en Honduras.",
         },
       ],
     },

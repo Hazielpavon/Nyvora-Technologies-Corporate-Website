@@ -1,10 +1,66 @@
 # Nyvora Technologies corporate website
 
-[Nyvora Technologies](https://nyvoratechnologies.com) is the official corporate website for a Honduran technology startup focused on building modern, useful and scalable software. This repository contains only the public website; it is separate from Nyvora Myke's private application code, runtime and technical documentation.
+Sitio corporativo oficial de [Nyvora Technologies](https://nyvoratechnologies.com). Esta versión es un rediseño visual del sitio lanzado en agosto de 2026: conserva el contenido, las rutas, el SEO, el formulario de contacto seguro y los textos legales. El sitio anterior queda en el historial de git (commit `bd09e34`).
 
-**Production:** [https://nyvoratechnologies.com](https://nyvoratechnologies.com)
+**Producción:** [https://nyvoratechnologies.com](https://nyvoratechnologies.com)
 
-![Nyvora Technologies homepage](docs/images/nyvora-homepage.jpg)
+| Claro | Oscuro |
+| --- | --- |
+| ![Inicio, modo claro](docs/images/home-light.jpg) | ![Inicio, modo oscuro](docs/images/home-dark.jpg) |
+| ![Myke, modo claro](docs/images/myke-light.jpg) | ![Myke, modo oscuro](docs/images/myke-dark.jpg) |
+
+## Qué cambió respecto al sitio anterior
+
+- **Identidad fiel al logo.** Paleta tomada del logotipo oficial: tinta azul marino y cian de marca como único acento. El logo ahora tiene fondo transparente y una variante para modo oscuro (`public/brand/`), en lugar de la caja blanca sobre fondo oscuro.
+- **Modo claro y oscuro automáticos** según la preferencia del sistema (`prefers-color-scheme`), con tokens CSS en `app/globals.css`.
+- **Tipografía Geist** (vía `next/font`, autoalojada) en lugar de la fuente del sistema.
+- **Hero más limpio:** titular, una frase de apoyo y dos acciones; el visual de marca usa la imagen de la identidad existente con un leve parallax.
+- **Myke se muestra, no solo se describe:** una vista previa de conversación construida como componente real (claramente marcada como ilustrativa), una comparación "recorrido convencional vs. Myke", un bento de capacidades, una línea de recorrido que se dibuja con el scroll y un acordeón nativo para la adaptación por institución.
+- **Sin etiquetas numeradas** (`01 / …`) sobre cada sección ni rayas largas (—); un único texto por intención de llamada a la acción ("Hablar con Nyvora").
+- **Movimiento con propósito y accesible:** animaciones de entrada y de scroll en CSS (visibles sin JavaScript), parallax y línea de progreso con Motion; todo se desactiva con `prefers-reduced-motion`.
+
+Las rutas (`/`, `/myke`, `/contact`, `/privacy`, `/terms`) y la API `/api/contact` se mantienen igual que en el sitio anterior. La navegación pasó a español: **Empresa / Myke / Contacto**.
+
+## Tecnología
+
+- Next.js 16 (App Router), React 19, TypeScript estricto
+- Tailwind CSS v4 con tokens de diseño propios
+- Motion (`motion/react`) para parallax y progreso ligado al scroll
+- Phosphor Icons
+- Resend para el envío del formulario (sin cambios)
+- Vitest + Testing Library, Playwright + axe-core
+
+## Desarrollo
+
+```bash
+npm ci
+npm run dev
+```
+
+Variables de entorno: copie `.env.example` a `.env.local` (ver `SECURITY.md`).
+
+## Calidad
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e
+```
+
+Los E2E verifican rutas, navegación móvil, ausencia de desbordes de 320 a 1440 px, el formulario, páginas legales `noindex`, el logo según el tema y **WCAG A/AA con axe en modo claro y oscuro**. Si usa un Chromium ya instalado en lugar de descargar navegadores de Playwright, indique su ruta con `PLAYWRIGHT_CHROMIUM_PATH`.
+
+## Proceso de diseño
+
+El rediseño se hizo con las skills incluidas en `.claude/skills/`:
+
+1. **taste-skill:** auditoría del sitio original, lectura de diseño ("sitio corporativo y de producto para tomadores de decisión en banca, lenguaje B2B sobrio y confiable") y verificación final contra su checklist.
+2. **image-to-code-skill:** análisis de referencias visuales. En el entorno de trabajo no había generación de imágenes, así que se usaron capturas reales del sitio y de los recursos de marca existentes como referencia.
+3. **web-design-guidelines:** revisión del código contra las Web Interface Guidelines de Vercel (formatos con `Intl`, `translate="no"` en marcas, `spellCheck` en correo, `touch-action`, estados hover).
+4. **playwright-cli:** capturas de escritorio y móvil en ambos temas para iterar el diseño y detectar problemas.
+
+---
 
 ## About Nyvora Technologies
 
@@ -15,20 +71,6 @@ Nyvora Technologies was created in Honduras to contribute to the country's techn
 Nyvora Myke is the company's principal product at this stage. It is a conversational banking platform for financial institutions: a person begins with a banking need expressed in everyday language, and the experience presents the information, services or next steps that the institution has chosen to enable. Myke complements an institution's existing digital experience; its specific capabilities depend on that institution's systems, policies and implementation scope.
 
 This website explains Myke's public value proposition only. It does not contain Myke's private architecture, source code, security design or implementation details.
-
-## Technology
-
-- Next.js 16 with the App Router
-- React 19
-- TypeScript in strict mode
-- CSS Modules and a small global design-token layer
-- Resend for server-side contact delivery
-- Vitest and Testing Library for component and route tests
-- Playwright and axe-core for browser smoke and accessibility checks
-- ESLint for static analysis
-- Vercel as the production hosting platform
-
-Public content routes are statically rendered where possible. Interactive JavaScript is limited mainly to the responsive navigation and contact form.
 
 ## Architecture
 
@@ -64,7 +106,8 @@ public/       Official logo and social-sharing assets
 tests/        Vitest and Testing Library coverage
 e2e/          Playwright browser and accessibility smoke coverage
 scripts/      Cross-platform orchestration for the production E2E server
-docs/images/  Portfolio screenshots used by this README
+docs/images/  Screenshots used by this README
+.claude/      Agent skills used for design work (see .claude/skills/SOURCES.md)
 ```
 
 The legal pages are website-specific drafts. They are not product agreements for Myke.

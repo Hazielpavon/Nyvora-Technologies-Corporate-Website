@@ -12,6 +12,11 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL,
+    contextOptions: { reducedMotion: "reduce" },
+    // Optional: point at a preinstalled Chromium instead of a Playwright download.
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+      : undefined,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },
