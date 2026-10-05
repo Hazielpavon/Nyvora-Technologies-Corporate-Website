@@ -1,4 +1,4 @@
-# Keeps Hazielpavon/Nyvora-Technologies (master, deployed by Vercel) and
+# Keeps Hazielpavon/nyvora-technologies-website (master, deployed by Vercel) and
 # Hazielpavon/Nyvora-Technologies-Corporate-Website (main) on the same commits.
 # The same file lives in both repositories; each push to a main branch is
 # replicated to the other one. Requires the SYNC_TOKEN secret in both repos:
@@ -25,11 +25,11 @@ jobs:
         id: target
         run: |
           case "$GITHUB_REPOSITORY" in
-            Hazielpavon/Nyvora-Technologies)
+            Hazielpavon/nyvora-technologies-website | Hazielpavon/Nyvora-Technologies)
               echo "repo=Hazielpavon/Nyvora-Technologies-Corporate-Website" >> "$GITHUB_OUTPUT"
               echo "branch=main" >> "$GITHUB_OUTPUT" ;;
             Hazielpavon/Nyvora-Technologies-Corporate-Website)
-              echo "repo=Hazielpavon/Nyvora-Technologies" >> "$GITHUB_OUTPUT"
+              echo "repo=Hazielpavon/nyvora-technologies-website" >> "$GITHUB_OUTPUT"
               echo "branch=master" >> "$GITHUB_OUTPUT" ;;
             *)
               echo "Unknown repository $GITHUB_REPOSITORY" >&2; exit 1 ;;

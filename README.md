@@ -6,7 +6,7 @@ Sitio oficial de [Nyvora Technologies](https://nyvoratechnologies.com). Conserva
 
 Este código vive en dos repositorios que siempre comparten los mismos commits:
 
-- [`Hazielpavon/Nyvora-Technologies`](https://github.com/Hazielpavon/Nyvora-Technologies) (rama `master`, la que Vercel publica en nyvoratechnologies.com)
+- [`Hazielpavon/nyvora-technologies-website`](https://github.com/Hazielpavon/nyvora-technologies-website) (rama `master`, la que Vercel publica en nyvoratechnologies.com)
 - [`Hazielpavon/Nyvora-Technologies-Corporate-Website`](https://github.com/Hazielpavon/Nyvora-Technologies-Corporate-Website) (rama `main`)
 
 El workflow [`.github/workflows/sync-repos.yml`](.github/workflows/sync-repos.yml) replica cada push de una rama principal a la otra. Necesita el secreto `SYNC_TOKEN` (token de GitHub con permiso *Contents* y *Workflows* de lectura y escritura sobre ambos repositorios) configurado en los dos repositorios.
