@@ -9,13 +9,16 @@ import {
   type ContactFieldErrors,
   type ContactFieldName,
 } from "@/lib/contact";
-import styles from "./ContactForm.module.css";
+import { ArrowRight } from "@phosphor-icons/react";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 type SubmissionIdentity = {
   submissionId: string;
   startedAt: number;
 };
+
+const fieldClass =
+  "grid gap-2 [&_label]:text-sm [&_label]:font-medium [&_label]:text-ink [&_input]:min-h-12 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-line [&_input]:bg-bg [&_input]:px-4 [&_input]:text-base [&_input]:text-ink [&_select]:min-h-12 [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-line [&_select]:bg-bg [&_select]:px-4 [&_select]:text-base [&_select]:text-ink [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-line [&_textarea]:bg-bg [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-base [&_textarea]:text-ink [&_[aria-invalid=true]]:border-danger";
 
 const CLIENT_REQUEST_TIMEOUT_MS = 15_000;
 const subscribeToHydration = () => () => undefined;
@@ -205,32 +208,32 @@ export function ContactForm() {
       ref={formRef}
       action="/api/contact"
       method="post"
-      className={styles.form}
+      className="rounded-[20px] border border-line bg-raised p-6 sm:p-8 md:p-10"
       noValidate
       aria-busy={isSubmitting}
       aria-describedby="contact-form-status"
       onSubmit={handleSubmit}
     >
       <noscript>
-        <p className={styles.noScriptMessage}>
+        <p className="mb-6 rounded-xl bg-surface p-4 text-sm text-ink">
           Active JavaScript para enviar este formulario de forma segura desde el sitio.
         </p>
       </noscript>
 
       <fieldset
-        className={styles.fieldset}
+        className="grid min-w-0 gap-6 disabled:opacity-70"
         disabled={!hydrated || isSubmitting}
         aria-disabled={!hydrated || isSubmitting}
       >
-        <div className={styles.notice} role="note">
+        <div className="rounded-xl bg-accent-wash p-4 text-sm leading-relaxed text-ink [&_p]:mt-1 [&_p]:text-ink-soft" role="note">
           <strong>Contacto directo con Nyvora.</strong>
           <p>
             El formulario envía su consulta directamente desde este sitio al canal correspondiente, sin abrir una aplicación externa.
           </p>
         </div>
 
-        <div className={styles.twoColumn}>
-          <div className={styles.field}>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div className={fieldClass}>
             <label htmlFor="name">Nombre</label>
             <input
               id="name"
@@ -243,10 +246,10 @@ export function ContactForm() {
               aria-describedby={errors.name ? "name-error" : undefined}
               onInput={() => clearError("name")}
             />
-            {errors.name ? <p id="name-error" className={styles.fieldError}>{errors.name}</p> : null}
+            {errors.name ? <p id="name-error" className="text-sm font-medium text-danger">{errors.name}</p> : null}
           </div>
 
-          <div className={styles.field}>
+          <div className={fieldClass}>
             <label htmlFor="organization">Organización</label>
             <input
               id="organization"
@@ -259,17 +262,18 @@ export function ContactForm() {
               aria-describedby={errors.organization ? "organization-error" : undefined}
               onInput={() => clearError("organization")}
             />
-            {errors.organization ? <p id="organization-error" className={styles.fieldError}>{errors.organization}</p> : null}
+            {errors.organization ? <p id="organization-error" className="text-sm font-medium text-danger">{errors.organization}</p> : null}
           </div>
         </div>
 
-        <div className={styles.field}>
+        <div className={fieldClass}>
           <label htmlFor="email">Correo</label>
           <input
             id="email"
             name="email"
             type="email"
             inputMode="email"
+            spellCheck={false}
             autoComplete="email"
             maxLength={254}
             required
@@ -277,11 +281,11 @@ export function ContactForm() {
             aria-describedby={`email-help${errors.email ? " email-error" : ""}`}
             onInput={() => clearError("email")}
           />
-          <p id="email-help" className={styles.helper}>Use un correo en el que podamos responder sobre esta consulta.</p>
-          {errors.email ? <p id="email-error" className={styles.fieldError}>{errors.email}</p> : null}
+          <p id="email-help" className="text-sm text-ink-muted">Use un correo en el que podamos responder sobre esta consulta.</p>
+          {errors.email ? <p id="email-error" className="text-sm font-medium text-danger">{errors.email}</p> : null}
         </div>
 
-        <div className={styles.field}>
+        <div className={fieldClass}>
           <label htmlFor="reason">Motivo de contacto</label>
           <select
             id="reason"
@@ -297,10 +301,10 @@ export function ContactForm() {
               <option key={reason.value} value={reason.value}>{reason.label}</option>
             ))}
           </select>
-          {errors.reason ? <p id="reason-error" className={styles.fieldError}>{errors.reason}</p> : null}
+          {errors.reason ? <p id="reason-error" className="text-sm font-medium text-danger">{errors.reason}</p> : null}
         </div>
 
-        <div className={styles.field}>
+        <div className={fieldClass}>
           <label htmlFor="subject">Asunto</label>
           <input
             id="subject"
@@ -313,10 +317,10 @@ export function ContactForm() {
             aria-describedby={errors.subject ? "subject-error" : undefined}
             onInput={() => clearError("subject")}
           />
-          {errors.subject ? <p id="subject-error" className={styles.fieldError}>{errors.subject}</p> : null}
+          {errors.subject ? <p id="subject-error" className="text-sm font-medium text-danger">{errors.subject}</p> : null}
         </div>
 
-        <div className={styles.field}>
+        <div className={fieldClass}>
           <label htmlFor="message">Mensaje</label>
           <textarea
             id="message"
@@ -329,13 +333,13 @@ export function ContactForm() {
             aria-describedby={`message-help${errors.message ? " message-error" : ""}`}
             onInput={() => clearError("message")}
           />
-          <p id="message-help" className={styles.helper}>
+          <p id="message-help" className="text-sm text-ink-muted">
             No incluya credenciales, datos financieros, registros de clientes, secretos ni otra información confidencial.
           </p>
-          {errors.message ? <p id="message-error" className={styles.fieldError}>{errors.message}</p> : null}
+          {errors.message ? <p id="message-error" className="text-sm font-medium text-danger">{errors.message}</p> : null}
         </div>
 
-        <div className={styles.honeypot} aria-hidden="true">
+        <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
           <label htmlFor="website">Sitio web</label>
           <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
         </div>
@@ -352,7 +356,7 @@ export function ContactForm() {
           readOnly
         />
 
-        <div className={styles.consentField}>
+        <div className="grid grid-cols-[auto_1fr] items-start gap-x-3 gap-y-2 text-sm leading-relaxed text-ink-soft [&_a]:text-accent-ink [&_a]:underline [&_a]:underline-offset-2 [&_input]:mt-1 [&_input]:size-[1.125rem] [&_input]:accent-[var(--accent-ink)] [&_p]:col-span-2">
           <input
             id="consent"
             name="consent"
@@ -365,12 +369,12 @@ export function ContactForm() {
           <label htmlFor="consent">
             He leído el <Link href="/privacy">Aviso de privacidad del sitio web</Link> y acepto que Nyvora trate la información proporcionada para atender mi consulta.
           </label>
-          {errors.consent ? <p id="consent-error" className={styles.fieldError}>{errors.consent}</p> : null}
+          {errors.consent ? <p id="consent-error" className="text-sm font-medium text-danger">{errors.consent}</p> : null}
         </div>
 
         <div
           id="contact-form-status"
-          className={`${styles.status} ${status === "error" ? styles.statusError : ""} ${status === "success" ? styles.statusReady : ""}`}
+          className={`rounded-xl px-4 py-3 text-sm ${status === "error" ? "bg-[color-mix(in_oklab,var(--danger)_10%,transparent)] text-danger" : status === "success" ? "bg-[color-mix(in_oklab,var(--success)_12%,transparent)] text-success" : "bg-surface text-ink-soft"}`}
           aria-live="polite"
           aria-atomic="true"
         >
@@ -378,12 +382,12 @@ export function ContactForm() {
         </div>
 
         <button
-          className={styles.submitButton}
+          className="group inline-flex min-h-12 w-full items-center justify-center gap-2.5 rounded-full bg-button px-7 text-[0.9375rem] font-medium text-button-ink transition-transform duration-200 active:scale-[0.98] disabled:cursor-not-allowed sm:w-auto sm:justify-self-start"
           type="submit"
           disabled={!hydrated || isSubmitting}
         >
           {!hydrated ? "Preparando…" : isSubmitting ? "Enviando…" : "Enviar mensaje"}
-          <span aria-hidden="true">→</span>
+          <ArrowRight aria-hidden="true" size={18} weight="bold" />
         </button>
       </fieldset>
     </form>
