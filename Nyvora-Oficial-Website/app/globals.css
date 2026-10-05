@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+/*
+ * Nyvora design tokens.
+ * Palette comes from the official logo: navy ink + brand cyan.
+ * Theme follows the visitor's system preference (light / dark).
+ * Radius system: interactive controls are full-pill, media frames and
+ * surfaces use 20px, form inputs use 12px.
+ */
+:root {
+  --bg: #f5f7fa;
+  --surface: #eaeff5;
+  --surface-raised: #fbfcfd;
+  --ink: #0b1b33;
+  --ink-soft: #33435a;
+  --ink-muted: #56657a;
+  --line: #d6dee8;
+  --accent: #00b4e6;
+  --accent-ink: #036494;
+  --accent-wash: #dff4fb;
+  --button: #0b1b33;
+  --button-ink: #f5f7fa;
+  --danger: #b42318;
+  --success: #067647;
+  --shadow: 214 40% 20%;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #070d17;
+    --surface: #0d1624;
+    --surface-raised: #111c2d;
+    --ink: #ebf1f7;
+    --ink-soft: #b9c6d6;
+    --ink-muted: #8b9bb1;
+    --line: #1d2a3d;
+    --accent: #22c3f2;
+    --accent-ink: #62d4f7;
+    --accent-wash: #0c2638;
+    --button: #22c3f2;
+    --button-ink: #04121f;
+    --danger: #ff8a7a;
+    --success: #5fd49a;
+    --shadow: 214 80% 2%;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-wash: var(--accent-wash);
+  --color-button: var(--button);
+  --color-button-ink: var(--button-ink);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a,
+  button,
+  summary,
+  label,
+  select {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #04121f;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  .site-container {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-container {
+      padding-inline: 2rem;
+    }
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    border-radius: 999px;
+    background: var(--button);
+    color: var(--button-ink);
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .prose-legal h2 {
+    margin-top: 3rem;
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .prose-legal h3 {
+    margin-top: 1.75rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .prose-legal p,
+  .prose-legal li {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: 1.75;
+  }
+
+  .prose-legal ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+
+  .prose-legal a {
+    color: var(--accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* Logo variants follow the system theme. */
+.logo-on-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo-on-light {
+    display: none;
+  }
+
+  .logo-on-dark {
+    display: block;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Entrance + scroll reveals. Pure CSS, so content stays visible without JS
+   and in browsers without scroll-driven animation support. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+
+    /* Conversation turns arrive one after another as the preview scrolls in. */
+    .chat-turn {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 18%) entry calc(55% + var(--i, 0) * 18%);
+    }
+  }
+}
