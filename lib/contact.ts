@@ -11,7 +11,18 @@ export const contactReasons = [
   { value: "other", label: "Otro", channel: "contact" },
 ] as const;
 
-export const contactFields = ["name", "organization", "email", "reason", "message", "consent"] as const;
+export const contactFields = [
+  "name",
+  "organization",
+  "email",
+  "reason",
+  "subject",
+  "message",
+  "consent",
+] as const;
+
+export const CONTACT_MIN_FILL_TIME_MS = 1_500;
+export const CONTACT_MAX_FILL_TIME_MS = 24 * 60 * 60 * 1_000;
 
 export type ContactReason = (typeof contactReasons)[number]["value"];
 export type ContactFieldName = (typeof contactFields)[number];
@@ -22,8 +33,11 @@ export type ContactSubmission = {
   organization: string;
   email: string;
   reason: ContactReason;
+  subject: string;
   message: string;
   consent: true;
+  submissionId: string;
+  startedAt: number;
 };
 
 export type ContactRequestData = ContactSubmission & {
@@ -32,7 +46,29 @@ export type ContactRequestData = ContactSubmission & {
 
 type ContactValidationResult =
   | { ok: true; data: ContactRequestData }
-  | { ok: false; fieldErrors: ContactFieldErrors };
+  | {
+      ok: false;
+      code: "validation_error" | "invalid_submission";
+      fieldErrors: ContactFieldErrors;
+    };
+
+type ContactValidationOptions = {
+  enforceTiming?: boolean;
+  now?: number;
+};
+
+const submissionIdPattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
+
+function hasControlCharacter(value: string, allowMultilineWhitespace = false) {
+  return Array.from(value).some((character) => {
+    const code = character.charCodeAt(0);
+    if (allowMultilineWhitespace && (code === 9 || code === 10 || code === 13)) {
+      return false;
+    }
+    return code <= 31 || (code >= 127 && code <= 159);
+  });
+}
 
 export function isContactReason(value: string): value is ContactReason {
   return contactReasons.some((reason) => reason.value === value);
@@ -47,7 +83,13 @@ export function getContactRecipient(reason: ContactReason) {
 }
 
 export function isValidEmailAddress(value: string) {
-  if (value.length > 254 || /[\r\n\s,;]/.test(value)) return false;
+  if (
+    value.length > 254 ||
+    /[\s,;]/u.test(value) ||
+    hasControlCharacter(value)
+  ) {
+    return false;
+  }
 
   const parts = value.split("@");
   if (parts.length !== 2) return false;
@@ -76,20 +118,34 @@ export function isValidEmailAddress(value: string) {
   );
 }
 
-export function validateContactSubmission(input: unknown): ContactValidationResult {
+export function validateContactSubmission(
+  input: unknown,
+  options: ContactValidationOptions = {},
+): ContactValidationResult {
   const source = input && typeof input === "object" ? input as Record<string, unknown> : {};
   const name = typeof source.name === "string" ? source.name.trim() : "";
   const organization = typeof source.organization === "string" ? source.organization.trim() : "";
   const email = typeof source.email === "string" ? source.email.trim() : "";
   const reason = typeof source.reason === "string" ? source.reason.trim() : "";
+  const subject = typeof source.subject === "string" ? source.subject.trim() : "";
   const message = typeof source.message === "string" ? source.message.trim() : "";
   const website = typeof source.website === "string" ? source.website.trim() : "";
+  const submissionId = typeof source.submissionId === "string" ? source.submissionId.trim() : "";
+  const startedAt = source.startedAt;
   const errors: ContactFieldErrors = {};
 
-  if (name.length < 2 || name.length > 100 || /[\r\n]/.test(name)) {
+  if (
+    name.length < 2 ||
+    name.length > 100 ||
+    hasControlCharacter(name)
+  ) {
     errors.name = "Ingrese un nombre válido de hasta 100 caracteres.";
   }
-  if (organization.length < 2 || organization.length > 120 || /[\r\n]/.test(organization)) {
+  if (
+    organization.length < 2 ||
+    organization.length > 120 ||
+    hasControlCharacter(organization)
+  ) {
     errors.organization = "Ingrese una organización válida de hasta 120 caracteres.";
   }
   if (!isValidEmailAddress(email)) {
@@ -98,7 +154,16 @@ export function validateContactSubmission(input: unknown): ContactValidationResu
   if (!isContactReason(reason)) {
     errors.reason = "Seleccione un motivo de contacto.";
   }
-  if (message.length < 20) {
+  if (
+    subject.length < 4 ||
+    subject.length > 120 ||
+    hasControlCharacter(subject)
+  ) {
+    errors.subject = "Ingrese un asunto válido de 4 a 120 caracteres.";
+  }
+  if (hasControlCharacter(message, true)) {
+    errors.message = "El mensaje contiene caracteres no permitidos.";
+  } else if (message.length < 20) {
     errors.message = "Incluya al menos 20 caracteres para explicar su consulta.";
   } else if (message.length > 2000) {
     errors.message = "El mensaje no puede superar los 2,000 caracteres.";
@@ -108,7 +173,21 @@ export function validateContactSubmission(input: unknown): ContactValidationResu
   }
 
   if (Object.keys(errors).length > 0 || !isContactReason(reason)) {
-    return { ok: false, fieldErrors: errors };
+    return { ok: false, code: "validation_error", fieldErrors: errors };
+  }
+
+  const enforceTiming = options.enforceTiming ?? true;
+  const now = options.now ?? Date.now();
+  const elapsed = typeof startedAt === "number" ? now - startedAt : Number.NaN;
+  const hiddenFieldsAreValid =
+    submissionIdPattern.test(submissionId) &&
+    typeof startedAt === "number" &&
+    Number.isSafeInteger(startedAt) &&
+    (!enforceTiming ||
+      (elapsed >= CONTACT_MIN_FILL_TIME_MS && elapsed <= CONTACT_MAX_FILL_TIME_MS));
+
+  if (!hiddenFieldsAreValid) {
+    return { ok: false, code: "invalid_submission", fieldErrors: {} };
   }
 
   return {
@@ -118,8 +197,11 @@ export function validateContactSubmission(input: unknown): ContactValidationResu
       organization,
       email,
       reason,
+      subject,
       message,
       consent: true,
+      submissionId,
+      startedAt,
       website,
     },
   };

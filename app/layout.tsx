@@ -1,8 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SITE } from "@/lib/site";
+import { serializeStructuredData } from "@/lib/structured-data";
 import "./globals.css";
+
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -33,7 +38,7 @@ export const metadata: Metadata = {
         url: "/og-es.png",
         width: 1732,
         height: 908,
-        alt: "Nyvora Technologies — Tecnología creada en Honduras.",
+        alt: "Nyvora Technologies. Tecnología creada en Honduras.",
       },
     ],
   },
@@ -43,15 +48,14 @@ export const metadata: Metadata = {
     description: SITE.description,
     images: ["/og-es.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 export const viewport: Viewport = {
-  colorScheme: "dark",
-  themeColor: "#050b14",
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f7fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#070d17" },
+  ],
 };
 
 const organizationSchema = {
@@ -84,8 +88,8 @@ const organizationSchema = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es">
-      <body>
+    <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="min-h-[100dvh]">
         <a className="skip-link" href="#main-content">
           Ir al contenido principal
         </a>
@@ -94,7 +98,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteFooter />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeStructuredData(organizationSchema) }}
         />
       </body>
     </html>

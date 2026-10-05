@@ -1,10 +1,13 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const isDevelopment = process.env.NODE_ENV === "development";
+const isVercelProduction = process.env.VERCEL_ENV === "production";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  "script-src-attr 'none'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
@@ -15,24 +18,41 @@ const contentSecurityPolicy = [
   "frame-ancestors 'none'",
 ].join("; ");
 
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: contentSecurityPolicy },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), payment=()",
+  },
+];
+
+if (isVercelProduction) {
+  securityHeaders.push({
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000",
+  });
+}
+
+// Pin the project root so Next.js never picks up a lockfile from a parent folder.
+const projectRoot = path.resolve(import.meta.dirname);
+
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
     return [
       {
+        source: "/api/contact",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+      {
         source: "/(.*)",
-        headers: [
-          { key: "Content-Security-Policy", value: contentSecurityPolicy },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Strict-Transport-Security", value: "max-age=31536000" },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), payment=()",
-          },
-        ],
+        headers: securityHeaders,
       },
     ];
   },

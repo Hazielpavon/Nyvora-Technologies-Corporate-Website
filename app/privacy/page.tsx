@@ -3,21 +3,24 @@ import Link from "next/link";
 import { LegalPage } from "@/components/Primitives";
 import { createPageMetadata, SITE } from "@/lib/site";
 
-// REVISIÓN JURÍDICA PENDIENTE: confirmar entidad responsable, bases jurídicas,
-// derechos aplicables, proveedores, transferencias y criterios de conservación.
-export const metadata: Metadata = createPageMetadata({
-  title: "Aviso de privacidad del sitio web",
-  description:
-    "Aviso inicial sobre el tratamiento de consultas e información técnica básica en el sitio web corporativo de Nyvora Technologies.",
-  path: "/privacy",
-});
+// LEGAL REVIEW PENDING: confirm the responsible entity, legal bases,
+// applicable rights, providers, transfers, and retention criteria.
+export const metadata: Metadata = {
+  ...createPageMetadata({
+    title: "Aviso de privacidad del sitio web",
+    description:
+      "Aviso inicial sobre el tratamiento de consultas e información técnica básica en el sitio web corporativo de Nyvora Technologies.",
+    path: "/privacy",
+  }),
+  robots: { index: false, follow: true },
+};
 
 export default function PrivacyPage() {
   return (
     <LegalPage
       eyebrow="Legal / Privacidad del sitio web"
       title="Aviso de privacidad del sitio web"
-      intro="Este aviso explica cómo Nyvora Technologies trata información personal relacionada con este sitio web corporativo y con las consultas enviadas mediante Contact."
+      intro="Este aviso explica cómo Nyvora Technologies trata información personal relacionada con este sitio web corporativo y con las consultas enviadas mediante Contacto."
     >
       <section id="scope">
         <h2>1. Alcance</h2>
@@ -29,7 +32,7 @@ export default function PrivacyPage() {
       <section id="information">
         <h2>2. Información que podemos tratar</h2>
         <p>
-          Cuando usted envía una consulta mediante Contact, el sitio transmite a Nyvora el nombre, la organización, la dirección de correo, el motivo de contacto y el mensaje que haya proporcionado. El formulario no solicita credenciales, información financiera ni registros de clientes.
+          Cuando usted envía una consulta mediante Contacto, el sitio transmite a Nyvora el nombre, la organización, la dirección de correo, el motivo de contacto, el asunto y el mensaje que haya proporcionado. El formulario no solicita credenciales, información financiera ni registros de clientes.
         </p>
         <p>
           La infraestructura de alojamiento y seguridad del sitio podría tratar datos técnicos básicos, como la dirección IP, información del navegador o dispositivo, páginas solicitadas, marcas de tiempo y registros de diagnóstico o seguridad. Los datos concretos dependerán de la configuración y de los proveedores que finalmente se seleccionen.
@@ -81,7 +84,7 @@ export default function PrivacyPage() {
       <section id="rights">
         <h2>8. Sus opciones y derechos</h2>
         <p>
-          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. Para formular una solicitud, use <Link href="/contact">Contact</Link>, seleccione «Privacidad» e indique el contexto necesario. El canal se dirige a {SITE.emails.privacy}. Podría ser necesario verificar la identidad de la persona solicitante.
+          Según la legislación aplicable, usted podría tener derechos sobre su información personal, como solicitar acceso, corrección, eliminación o limitación, u oponerse a determinados tratamientos. Para formular una solicitud, use <Link href="/contact">Contacto</Link>, seleccione «Privacidad» e indique el contexto necesario. El canal se dirige a {SITE.emails.privacy}. Podría ser necesario verificar la identidad de la persona solicitante.
         </p>
       </section>
 
@@ -95,7 +98,7 @@ export default function PrivacyPage() {
       <section id="contact">
         <h2>10. Contacto</h2>
         <p>
-          Para consultas o solicitudes relacionadas con privacidad, use <Link href="/contact">Contact</Link> y seleccione «Privacidad». El mensaje se dirige a {SITE.emails.privacy}. Nyvora Technologies, {SITE.location}.
+          Para consultas o solicitudes relacionadas con privacidad, use <Link href="/contact">Contacto</Link> y seleccione «Privacidad». El mensaje se dirige a {SITE.emails.privacy}. Nyvora Technologies, {SITE.location}.
         </p>
         <p>
           La revisión jurídica deberá confirmar la entidad legal responsable, las bases jurídicas aplicables, los derechos de los visitantes según su ubicación, las salvaguardas para transferencias internacionales, los criterios de conservación y el procedimiento aplicable a las solicitudes de privacidad.

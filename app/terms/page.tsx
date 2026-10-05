@@ -3,14 +3,17 @@ import Link from "next/link";
 import { LegalPage } from "@/components/Primitives";
 import { createPageMetadata, SITE } from "@/lib/site";
 
-// REVISIÓN JURÍDICA PENDIENTE: confirmar propiedad intelectual, exclusiones,
-// límites de responsabilidad, legislación aplicable, foro y controversias.
-export const metadata: Metadata = createPageMetadata({
-  title: "Términos de uso del sitio web",
-  description:
-    "Términos iniciales para el uso informativo del sitio web corporativo de Nyvora Technologies.",
-  path: "/terms",
-});
+// LEGAL REVIEW PENDING: confirm intellectual property, exclusions,
+// liability limits, applicable law, venue, and dispute terms.
+export const metadata: Metadata = {
+  ...createPageMetadata({
+    title: "Términos de uso del sitio web",
+    description:
+      "Términos iniciales para el uso informativo del sitio web corporativo de Nyvora Technologies.",
+    path: "/terms",
+  }),
+  robots: { index: false, follow: true },
+};
 
 export default function TermsPage() {
   return (
@@ -108,7 +111,7 @@ export default function TermsPage() {
       <section id="contact">
         <h2>12. Contacto</h2>
         <p>
-          Para formular consultas sobre estos términos, use <Link href="/contact">Contact</Link>, seleccione «Asuntos legales» y envíe su mensaje. El canal se dirige a {SITE.emails.legal}.
+          Para formular consultas sobre estos términos, use <Link href="/contact">Contacto</Link>, seleccione «Asuntos legales» y envíe su mensaje. El canal se dirige a {SITE.emails.legal}.
         </p>
       </section>
     </LegalPage>

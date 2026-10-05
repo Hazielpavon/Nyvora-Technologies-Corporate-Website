@@ -1,0 +1,85 @@
+# Keeps Hazielpavon/Nyvora-Technologies (master, deployed by Vercel) and
+# Hazielpavon/Nyvora-Technologies-Corporate-Website (main) on the same commits.
+# The same file lives in both repositories; each push to a main branch is
+# replicated to the other one. Requires the SYNC_TOKEN secret in both repos:
+# a fine-grained token with Contents and Workflows read/write on both.
+name: Sync repositories
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-repositories
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve target
+        id: target
+        run: |
+          case "$GITHUB_REPOSITORY" in
+            Hazielpavon/Nyvora-Technologies)
+              echo "repo=Hazielpavon/Nyvora-Technologies-Corporate-Website" >> "$GITHUB_OUTPUT"
+              echo "branch=main" >> "$GITHUB_OUTPUT" ;;
+            Hazielpavon/Nyvora-Technologies-Corporate-Website)
+              echo "repo=Hazielpavon/Nyvora-Technologies" >> "$GITHUB_OUTPUT"
+              echo "branch=master" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "Unknown repository $GITHUB_REPOSITORY" >&2; exit 1 ;;
+          esac
+
+      - name: Check token
+        id: token
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "::warning::SYNC_TOKEN is not configured; skipping repository sync."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.token.outputs.present == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: Push to the other repository
+        if: steps.token.outputs.present == 'true'
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+          TARGET_REPO: ${{ steps.target.outputs.repo }}
+          TARGET_BRANCH: ${{ steps.target.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add target "https://x-access-token:${SYNC_TOKEN}@github.com/${TARGET_REPO}.git"
+          git fetch --no-tags target "$TARGET_BRANCH"
+
+          head=$(git rev-parse HEAD)
+          other=$(git rev-parse FETCH_HEAD)
+
+          if [ "$head" = "$other" ]; then
+            echo "Both repositories are already on $head."
+          elif git merge-base --is-ancestor "$other" "$head"; then
+            echo "Fast-forwarding $TARGET_REPO@$TARGET_BRANCH to $head."
+            git push target "HEAD:refs/heads/$TARGET_BRANCH"
+          elif git merge-base --is-ancestor "$head" "$other"; then
+            echo "$TARGET_REPO is ahead; its own sync run will update this repository."
+          else
+            echo "Branches diverged; merging $TARGET_REPO@$TARGET_BRANCH."
+            git merge --no-edit FETCH_HEAD -m "chore: sync with $TARGET_REPO"
+            git push target "HEAD:refs/heads/$TARGET_BRANCH"
+            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          fi

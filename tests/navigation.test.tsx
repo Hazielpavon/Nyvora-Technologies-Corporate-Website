@@ -18,12 +18,12 @@ describe("corporate navigation", () => {
     expect(navigation).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Myke" })).toHaveAttribute("aria-current", "page");
     const brand = screen.getByRole("link", { name: /Nyvora Technologies, página principal/i });
-    expect(brand.querySelector("img")?.getAttribute("src")).toContain("nyvora-logo.png");
+    expect(brand.querySelector("img")?.getAttribute("src")).toContain("logo-light.png");
 
     const expectedLinks = [
-      ["Company", "/"],
+      ["Empresa", "/"],
       ["Myke", "/myke"],
-      ["Contact", "/contact"],
+      ["Contacto", "/contact"],
     ];
 
     expect(navigation.querySelectorAll("a")).toHaveLength(expectedLinks.length);
@@ -67,8 +67,8 @@ describe("corporate navigation", () => {
     expect(container).toHaveTextContent("contact@nyvoratechnologies.com");
     expect(container).toHaveTextContent("support@nyvoratechnologies.com");
     expect(container.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
-    expect(container.innerHTML).not.toMatch(/@nyvoratechnologies\.com\.test-|security@nyvoratechnologies\.com/i);
+    expect(container.innerHTML).not.toMatch(/@nyvoratechnologies\.com\.test-/i);
     const brand = screen.getByRole("link", { name: /Nyvora Technologies, página principal/i });
-    expect(brand.querySelector("img")?.getAttribute("src")).toContain("nyvora-logo.png");
+    expect(brand.querySelector("img")?.getAttribute("src")).toContain("logo-light.png");
   });
 });
