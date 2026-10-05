@@ -29,7 +29,7 @@ export default function NotFound() {
             Es posible que la dirección haya cambiado o que la página ya no exista. Regrese al sitio corporativo para continuar.
           </p>
           <div className="mt-10">
-            <ActionLink href="/">Volver a Company</ActionLink>
+            <ActionLink href="/">Volver al inicio</ActionLink>
           </div>
         </div>
       </div>

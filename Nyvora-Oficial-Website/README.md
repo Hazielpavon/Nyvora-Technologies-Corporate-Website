@@ -17,7 +17,7 @@ Rediseño del sitio corporativo de [Nyvora Technologies](https://nyvoratechnolog
 - **Sin etiquetas numeradas** (`01 / …`) sobre cada sección ni rayas largas (—); un único texto por intención de llamada a la acción ("Hablar con Nyvora").
 - **Movimiento con propósito y accesible:** animaciones de entrada y de scroll en CSS (visibles sin JavaScript), parallax y línea de progreso con Motion; todo se desactiva con `prefers-reduced-motion`.
 
-Las rutas (`/`, `/myke`, `/contact`, `/privacy`, `/terms`), las etiquetas de navegación y la API `/api/contact` se mantienen igual que en el sitio original.
+Las rutas (`/`, `/myke`, `/contact`, `/privacy`, `/terms`) y la API `/api/contact` se mantienen igual que en el sitio original. La navegación pasó a español: **Empresa / Myke / Contacto**.
 
 ## Tecnología
 

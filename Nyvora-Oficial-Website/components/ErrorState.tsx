@@ -31,7 +31,7 @@ export function ErrorState({ headingId, retry }: ErrorStateProps) {
           href="/"
           className="inline-flex min-h-12 items-center rounded-full border border-line px-6 font-medium text-ink hover:bg-surface"
         >
-          Volver a Company
+          Volver al inicio
         </Link>
       </div>
     </section>

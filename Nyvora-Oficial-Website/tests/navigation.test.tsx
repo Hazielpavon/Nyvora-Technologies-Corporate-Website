@@ -21,9 +21,9 @@ describe("corporate navigation", () => {
     expect(brand.querySelector("img")?.getAttribute("src")).toContain("logo-light.png");
 
     const expectedLinks = [
-      ["Company", "/"],
+      ["Empresa", "/"],
       ["Myke", "/myke"],
-      ["Contact", "/contact"],
+      ["Contacto", "/contact"],
     ];
 
     expect(navigation.querySelectorAll("a")).toHaveLength(expectedLinks.length);

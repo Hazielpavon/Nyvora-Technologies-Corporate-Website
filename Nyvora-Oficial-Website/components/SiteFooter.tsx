@@ -24,9 +24,9 @@ export function SiteFooter() {
 
         <nav className="flex flex-col gap-3 text-[0.9375rem] md:col-span-2" aria-label="Secciones principales">
           <p className="mb-1 text-sm font-medium text-ink">Nyvora</p>
-          <Link className={linkClass} href="/">Company</Link>
+          <Link className={linkClass} href="/">Empresa</Link>
           <Link className={linkClass} href="/myke">Myke</Link>
-          <Link className={linkClass} href="/contact">Contact</Link>
+          <Link className={linkClass} href="/contact">Contacto</Link>
         </nav>
 
         <nav className="flex flex-col gap-3 text-[0.9375rem] md:col-span-2" aria-label="Enlaces legales">

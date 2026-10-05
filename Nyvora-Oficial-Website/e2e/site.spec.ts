@@ -45,7 +45,7 @@ test("primary navigation works on desktop and mobile", async ({ page }) => {
   await menuButton.click();
   await expect(menuButton).toHaveAttribute("aria-expanded", "true");
   const mobileNavigation = page.getByRole("navigation", { name: "Navegación principal" });
-  await expect(mobileNavigation.getByRole("link", { name: "Company" })).toBeFocused();
+  await expect(mobileNavigation.getByRole("link", { name: "Empresa" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(menuButton).toBeFocused();
   await expect(menuButton).toHaveAttribute("aria-expanded", "false");

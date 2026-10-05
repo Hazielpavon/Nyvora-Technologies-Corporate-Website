@@ -1,7 +1,7 @@
 export const navigation = [
-  { href: "/", label: "Company" },
+  { href: "/", label: "Empresa" },
   { href: "/myke", label: "Myke" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contacto" },
 ] as const;
 
 export const companyPrinciples = [

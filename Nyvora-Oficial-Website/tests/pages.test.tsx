@@ -60,7 +60,7 @@ describe("critical page rendering", () => {
     ).rejects.toThrow();
   });
 
-  it("presents the company location on Company", () => {
+  it("presents the company location on the Empresa page", () => {
     render(<HomePage />);
 
     expect(screen.getAllByText(/Tegucigalpa, Honduras/i).length).toBeGreaterThan(0);
